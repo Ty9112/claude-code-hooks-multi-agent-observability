@@ -1,46 +1,106 @@
 /* Theme System - CSS Custom Properties */
 
-/* Default theme variables (Light theme) */
+/* Default theme: Harris Mission Control
+   Synthesized from fabrication-mcp (dark cyberpunk, cyan accent)
+   and Harris 3D Viewer (navy + Harris blue #29ADE4) */
 :root {
-  /* Primary colors */
+  /* Primary colors — Harris Blue */
+  --theme-primary: #29ADE4;
+  --theme-primary-hover: #1e8fbe;
+  --theme-primary-light: #1a2a4a;
+  --theme-primary-dark: #0c6fa0;
+
+  /* Background colors — Deep navy/dark (fabrication-mcp layered depth) */
+  --theme-bg-primary: #0a0c0e;
+  --theme-bg-secondary: #0f1317;
+  --theme-bg-tertiary: #141a20;
+  --theme-bg-quaternary: #1a2530;
+
+  /* Text colors — 3-tier hierarchy (fabrication-mcp) */
+  --theme-text-primary: #e8f4ff;
+  --theme-text-secondary: #8aacbe;
+  --theme-text-tertiary: #5a7a8e;
+  --theme-text-quaternary: #3d5568;
+
+  /* Border colors */
+  --theme-border-primary: #1e2c38;
+  --theme-border-secondary: #2a4055;
+  --theme-border-tertiary: #3a5570;
+
+  /* Accent colors — fabrication-mcp status palette */
+  --theme-accent-success: #00e57a;
+  --theme-accent-warning: #ffaa00;
+  --theme-accent-error: #ff3f5a;
+  --theme-accent-info: #00c8ff;
+
+  /* Shadow colors */
+  --theme-shadow: rgba(0, 0, 0, 0.5);
+  --theme-shadow-lg: rgba(0, 0, 0, 0.75);
+
+  /* Interactive states */
+  --theme-hover-bg: rgba(41, 173, 228, 0.1);
+  --theme-active-bg: rgba(41, 173, 228, 0.2);
+  --theme-focus-ring: #29ADE4;
+
+  /* Theme transitions */
+  --theme-transition: all 0.18s ease;
+  --theme-transition-fast: all 0.1s ease;
+}
+
+/* Harris Mission Control — explicit class for theme switching */
+.theme-harris-mission-control {
+  --theme-primary: #29ADE4;
+  --theme-primary-hover: #1e8fbe;
+  --theme-primary-light: #1a2a4a;
+  --theme-primary-dark: #0c6fa0;
+  --theme-bg-primary: #0a0c0e;
+  --theme-bg-secondary: #0f1317;
+  --theme-bg-tertiary: #141a20;
+  --theme-bg-quaternary: #1a2530;
+  --theme-text-primary: #e8f4ff;
+  --theme-text-secondary: #8aacbe;
+  --theme-text-tertiary: #5a7a8e;
+  --theme-text-quaternary: #3d5568;
+  --theme-border-primary: #1e2c38;
+  --theme-border-secondary: #2a4055;
+  --theme-border-tertiary: #3a5570;
+  --theme-accent-success: #00e57a;
+  --theme-accent-warning: #ffaa00;
+  --theme-accent-error: #ff3f5a;
+  --theme-accent-info: #00c8ff;
+  --theme-shadow: rgba(0, 0, 0, 0.5);
+  --theme-shadow-lg: rgba(0, 0, 0, 0.75);
+  --theme-hover-bg: rgba(41, 173, 228, 0.1);
+  --theme-active-bg: rgba(41, 173, 228, 0.2);
+  --theme-focus-ring: #29ADE4;
+}
+
+/* Light theme */
+.theme-light {
   --theme-primary: #3b82f6;
   --theme-primary-hover: #2563eb;
   --theme-primary-light: #dbeafe;
   --theme-primary-dark: #1e40af;
-  
-  /* Background colors */
   --theme-bg-primary: #ffffff;
   --theme-bg-secondary: #f9fafb;
   --theme-bg-tertiary: #f3f4f6;
   --theme-bg-quaternary: #e5e7eb;
-  
-  /* Text colors */
   --theme-text-primary: #111827;
   --theme-text-secondary: #374151;
   --theme-text-tertiary: #6b7280;
   --theme-text-quaternary: #9ca3af;
-  
-  /* Border colors */
   --theme-border-primary: #e5e7eb;
   --theme-border-secondary: #d1d5db;
   --theme-border-tertiary: #9ca3af;
-  
-  /* Accent colors */
   --theme-accent-success: #10b981;
   --theme-accent-warning: #f59e0b;
   --theme-accent-error: #ef4444;
   --theme-accent-info: #3b82f6;
-  
-  /* Shadow colors */
   --theme-shadow: rgba(0, 0, 0, 0.1);
   --theme-shadow-lg: rgba(0, 0, 0, 0.25);
-  
-  /* Interactive states */
   --theme-hover-bg: rgba(0, 0, 0, 0.05);
   --theme-active-bg: rgba(0, 0, 0, 0.1);
   --theme-focus-ring: #3b82f6;
-  
-  /* Theme transitions */
   --theme-transition: all 0.2s ease-in-out;
   --theme-transition-fast: all 0.1s ease-in-out;
 }

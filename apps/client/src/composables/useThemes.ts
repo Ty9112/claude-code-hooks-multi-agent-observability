@@ -16,6 +16,39 @@ import { PREDEFINED_THEME_NAMES, COLOR_REGEX, RGBA_REGEX } from '../types/theme'
 
 // Predefined themes configuration
 const PREDEFINED_THEMES: Record<ThemeName, PredefinedTheme> = {
+  'harris-mission-control': {
+    name: 'harris-mission-control',
+    displayName: 'Harris Mission Control',
+    description: 'Dark theme inspired by Harris fabrication-mcp and 3D Viewer',
+    cssClass: 'theme-harris-mission-control',
+    preview: { primary: '#0f1317', secondary: '#141a20', accent: '#29ADE4' },
+    colors: {
+      primary: '#29ADE4',
+      primaryHover: '#1e8fbe',
+      primaryLight: '#1a2a4a',
+      primaryDark: '#0c6fa0',
+      bgPrimary: '#0a0c0e',
+      bgSecondary: '#0f1317',
+      bgTertiary: '#141a20',
+      bgQuaternary: '#1a2530',
+      textPrimary: '#e8f4ff',
+      textSecondary: '#8aacbe',
+      textTertiary: '#5a7a8e',
+      textQuaternary: '#3d5568',
+      borderPrimary: '#1e2c38',
+      borderSecondary: '#2a4055',
+      borderTertiary: '#3a5570',
+      accentSuccess: '#00e57a',
+      accentWarning: '#ffaa00',
+      accentError: '#ff3f5a',
+      accentInfo: '#00c8ff',
+      shadow: 'rgba(0, 0, 0, 0.5)',
+      shadowLg: 'rgba(0, 0, 0, 0.75)',
+      hoverBg: 'rgba(41, 173, 228, 0.1)',
+      activeBg: 'rgba(41, 173, 228, 0.2)',
+      focusRing: '#29ADE4'
+    }
+  },
   light: {
     name: 'light',
     displayName: 'Light',
@@ -714,9 +747,8 @@ export function useThemes() {
     if (savedTheme) {
       setTheme(savedTheme);
     } else {
-      // Detect system preference
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      setTheme(prefersDark ? 'dark' : 'light');
+      // Default to Harris Mission Control
+      setTheme('harris-mission-control');
     }
   };
 

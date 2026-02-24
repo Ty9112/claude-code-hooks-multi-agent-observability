@@ -1,4 +1,4 @@
-import { initDatabase, insertEvent, getFilterOptions, getRecentEvents, updateEventHITLResponse } from './db';
+import { initDatabase, insertEvent, getFilterOptions, getRecentEvents, updateEventHITLResponse, getSessionSummaries, getToolAnalytics, initHudTable, insertHudSnapshot, getHudSnapshots, getLatestHudSnapshot } from './db';
 import type { HookEvent, HumanInTheLoopResponse } from './types';
 import { 
   createTheme, 
@@ -13,6 +13,7 @@ import {
 
 // Initialize database
 initDatabase();
+initHudTable();
 
 // Store WebSocket clients
 const wsClients = new Set<any>();
@@ -172,6 +173,22 @@ const server = Bun.serve({
       const limit = parseInt(url.searchParams.get('limit') || '300');
       const events = getRecentEvents(limit);
       return new Response(JSON.stringify(events), {
+        headers: { ...headers, 'Content-Type': 'application/json' }
+      });
+    }
+
+    // GET /events/sessions - Session summaries
+    if (url.pathname === '/events/sessions' && req.method === 'GET') {
+      const summaries = getSessionSummaries();
+      return new Response(JSON.stringify(summaries), {
+        headers: { ...headers, 'Content-Type': 'application/json' }
+      });
+    }
+
+    // GET /events/analytics - Tool analytics
+    if (url.pathname === '/events/analytics' && req.method === 'GET') {
+      const analytics = getToolAnalytics();
+      return new Response(JSON.stringify(analytics), {
         headers: { ...headers, 'Content-Type': 'application/json' }
       });
     }
@@ -405,6 +422,57 @@ const server = Bun.serve({
       });
     }
     
+    // HUD API endpoints
+
+    // GET /api/hud/current — read cache file from claude-hud plugin
+    if (url.pathname === '/api/hud/current' && req.method === 'GET') {
+      try {
+        const homeDir = process.env.HOME || process.env.USERPROFILE || '';
+        const cachePath = `${homeDir}/.claude/plugins/claude-hud/.usage-cache.json`;
+        const file = Bun.file(cachePath);
+        if (await file.exists()) {
+          const raw = await file.json();
+          const data = raw?.data;
+          if (data) {
+            return new Response(JSON.stringify({
+              planName: data.planName ?? null,
+              fiveHour: data.fiveHour ?? null,
+              sevenDay: data.sevenDay ?? null,
+              fiveHourResetAt: data.fiveHourResetAt ?? null,
+              sevenDayResetAt: data.sevenDayResetAt ?? null,
+              timestamp: raw.timestamp ?? Date.now(),
+            }), {
+              headers: { ...headers, 'Content-Type': 'application/json' }
+            });
+          }
+        }
+        // Return latest from DB if cache file not available
+        const latest = getLatestHudSnapshot();
+        if (latest) {
+          return new Response(JSON.stringify(latest), {
+            headers: { ...headers, 'Content-Type': 'application/json' }
+          });
+        }
+        return new Response('null', {
+          headers: { ...headers, 'Content-Type': 'application/json' }
+        });
+      } catch (err) {
+        console.error('Error reading HUD cache:', err);
+        return new Response('null', {
+          headers: { ...headers, 'Content-Type': 'application/json' }
+        });
+      }
+    }
+
+    // GET /api/hud/history — return snapshots from SQLite
+    if (url.pathname === '/api/hud/history' && req.method === 'GET') {
+      const since = parseInt(url.searchParams.get('since') || '0');
+      const snapshots = getHudSnapshots(since);
+      return new Response(JSON.stringify(snapshots), {
+        headers: { ...headers, 'Content-Type': 'application/json' }
+      });
+    }
+
     // WebSocket upgrade
     if (url.pathname === '/stream') {
       const success = server.upgrade(req);
@@ -449,3 +517,50 @@ const server = Bun.serve({
 console.log(`🚀 Server running on http://localhost:${server.port}`);
 console.log(`📊 WebSocket endpoint: ws://localhost:${server.port}/stream`);
 console.log(`📮 POST events to: http://localhost:${server.port}/events`);
+
+// Background HUD poller — reads cache file every 60s and snapshots to SQLite
+let lastHudHash = '';
+setInterval(async () => {
+  try {
+    const homeDir = process.env.HOME || process.env.USERPROFILE || '';
+    const cachePath = `${homeDir}/.claude/plugins/claude-hud/.usage-cache.json`;
+    const file = Bun.file(cachePath);
+    if (!(await file.exists())) return;
+
+    const raw = await file.json();
+    const data = raw?.data;
+    if (!data) return;
+
+    // Simple change detection
+    const hash = `${data.fiveHour}-${data.sevenDay}-${data.planName}`;
+    if (hash === lastHudHash) return;
+    lastHudHash = hash;
+
+    const snapshot = {
+      planName: data.planName ?? null,
+      fiveHour: data.fiveHour ?? null,
+      sevenDay: data.sevenDay ?? null,
+      fiveHourResetAt: data.fiveHourResetAt ?? null,
+      sevenDayResetAt: data.sevenDayResetAt ?? null,
+    };
+
+    insertHudSnapshot(snapshot);
+
+    // Broadcast to WebSocket clients
+    const message = JSON.stringify({
+      type: 'hud_update',
+      data: { ...snapshot, timestamp: Date.now() },
+    });
+    wsClients.forEach(client => {
+      try {
+        client.send(message);
+      } catch {
+        wsClients.delete(client);
+      }
+    });
+
+    console.log('[HUD] Snapshot saved and broadcast');
+  } catch (err) {
+    // Silent fail — HUD polling is non-critical
+  }
+}, 60_000);

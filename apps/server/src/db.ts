@@ -384,4 +384,142 @@ export function updateEventHITLResponse(id: number, response: any): HookEvent | 
   };
 }
 
+// Analytics queries
+
+export function getSessionSummaries(): any[] {
+  const stmt = db.prepare(`
+    SELECT
+      source_app,
+      session_id,
+      COUNT(*) as event_count,
+      MIN(timestamp) as first_event,
+      MAX(timestamp) as last_event,
+      SUM(CASE WHEN hook_event_type = 'PreToolUse' THEN 1 ELSE 0 END) as tool_count,
+      MAX(model_name) as model_name
+    FROM events
+    GROUP BY source_app, session_id
+    ORDER BY last_event DESC
+  `);
+  return stmt.all() as any[];
+}
+
+export function getToolAnalytics(): any {
+  const toolStats = db.prepare(`
+    SELECT
+      json_extract(payload, '$.tool_name') as tool_name,
+      SUM(CASE WHEN hook_event_type = 'PreToolUse' THEN 1 ELSE 0 END) as pre_count,
+      SUM(CASE WHEN hook_event_type = 'PostToolUse' THEN 1 ELSE 0 END) as post_count,
+      SUM(CASE WHEN hook_event_type = 'PostToolUseFailure' THEN 1 ELSE 0 END) as fail_count
+    FROM events
+    WHERE json_extract(payload, '$.tool_name') IS NOT NULL
+    GROUP BY tool_name
+    ORDER BY pre_count DESC
+    LIMIT 20
+  `).all();
+
+  const eventDistribution = db.prepare(`
+    SELECT
+      hook_event_type,
+      COUNT(*) as count
+    FROM events
+    GROUP BY hook_event_type
+    ORDER BY count DESC
+  `).all();
+
+  const totalEvents = (db.prepare('SELECT COUNT(*) as total FROM events').get() as any).total;
+
+  const eventsPerMinute = db.prepare(`
+    SELECT
+      (timestamp / 60000) * 60000 as minute_bucket,
+      COUNT(*) as count
+    FROM events
+    WHERE timestamp > ?
+    GROUP BY minute_bucket
+    ORDER BY minute_bucket ASC
+  `).all(Date.now() - 30 * 60 * 1000);
+
+  return {
+    toolStats,
+    eventDistribution: (eventDistribution as any[]).map((row: any) => ({
+      ...row,
+      percentage: totalEvents > 0 ? (row.count / totalEvents * 100) : 0
+    })),
+    eventsPerMinute
+  };
+}
+
+// HUD snapshots table + functions
+
+export function initHudTable(): void {
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS hud_snapshots (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      plan_name TEXT,
+      five_hour REAL,
+      seven_day REAL,
+      five_hour_reset_at INTEGER,
+      seven_day_reset_at INTEGER,
+      timestamp INTEGER NOT NULL
+    )
+  `);
+  db.exec('CREATE INDEX IF NOT EXISTS idx_hud_timestamp ON hud_snapshots(timestamp)');
+}
+
+export function insertHudSnapshot(data: {
+  planName: string | null;
+  fiveHour: number | null;
+  sevenDay: number | null;
+  fiveHourResetAt: number | null;
+  sevenDayResetAt: number | null;
+}): void {
+  const stmt = db.prepare(`
+    INSERT INTO hud_snapshots (plan_name, five_hour, seven_day, five_hour_reset_at, seven_day_reset_at, timestamp)
+    VALUES (?, ?, ?, ?, ?, ?)
+  `);
+  stmt.run(
+    data.planName,
+    data.fiveHour,
+    data.sevenDay,
+    data.fiveHourResetAt,
+    data.sevenDayResetAt,
+    Date.now()
+  );
+}
+
+export function getHudSnapshots(since: number): any[] {
+  const stmt = db.prepare(`
+    SELECT plan_name, five_hour, seven_day, five_hour_reset_at, seven_day_reset_at, timestamp
+    FROM hud_snapshots
+    WHERE timestamp > ?
+    ORDER BY timestamp ASC
+  `);
+  return (stmt.all(since) as any[]).map(row => ({
+    planName: row.plan_name,
+    fiveHour: row.five_hour,
+    sevenDay: row.seven_day,
+    fiveHourResetAt: row.five_hour_reset_at,
+    sevenDayResetAt: row.seven_day_reset_at,
+    timestamp: row.timestamp,
+  }));
+}
+
+export function getLatestHudSnapshot(): any | null {
+  const stmt = db.prepare(`
+    SELECT plan_name, five_hour, seven_day, five_hour_reset_at, seven_day_reset_at, timestamp
+    FROM hud_snapshots
+    ORDER BY timestamp DESC
+    LIMIT 1
+  `);
+  const row = stmt.get() as any;
+  if (!row) return null;
+  return {
+    planName: row.plan_name,
+    fiveHour: row.five_hour,
+    sevenDay: row.seven_day,
+    fiveHourResetAt: row.five_hour_reset_at,
+    sevenDayResetAt: row.seven_day_reset_at,
+    timestamp: row.timestamp,
+  };
+}
+
 export { db };
