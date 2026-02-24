@@ -1,3 +1,50 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Harris Design System — Base Styles */
+@layer base {
+  html, body {
+    font-family: 'Barlow', system-ui, -apple-system, sans-serif;
+    font-weight: 400;
+    font-size: 13px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Slim scrollbars (fabrication-mcp pattern) */
+  ::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--theme-bg-primary);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--theme-border-secondary);
+    border-radius: 3px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--theme-primary);
+  }
+}
+
+/* Utility classes for Harris typography */
+@layer utilities {
+  .font-ui {
+    font-family: 'Barlow', system-ui, sans-serif;
+  }
+  .font-label {
+    font-family: 'Barlow Condensed', 'Barlow', sans-serif;
+  }
+  .font-mono-data {
+    font-family: 'Share Tech Mono', 'Courier New', monospace;
+  }
+  .section-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+}

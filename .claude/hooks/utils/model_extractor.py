@@ -81,13 +81,18 @@ def extract_model_from_transcript(transcript_path: str) -> str:
     model_name = ''
 
     try:
-        # Read transcript file in reverse to find most recent assistant message
-        # We'll read the whole file since we need to find the LAST occurrence
-        with open(transcript_path, 'r') as f:
-            lines = f.readlines()
+        # Read only the last ~32KB of the transcript to find the model name
+        # quickly without loading the entire file (which can be many MB).
+        chunk_size = 32 * 1024
+        with open(transcript_path, 'rb') as f:
+            f.seek(0, 2)  # Seek to end
+            file_size = f.tell()
+            start = max(0, file_size - chunk_size)
+            f.seek(start)
+            tail = f.read().decode('utf-8', errors='replace')
 
-        # Iterate in reverse to find most recent assistant message with model
-        for line in reversed(lines):
+        # Split into lines and iterate in reverse
+        for line in reversed(tail.splitlines()):
             line = line.strip()
             if not line:
                 continue
@@ -103,10 +108,10 @@ def extract_model_from_transcript(transcript_path: str) -> str:
                     break  # Found the most recent one
 
             except json.JSONDecodeError:
-                # Skip invalid JSON lines
+                # Skip invalid JSON lines (first line may be partial)
                 continue
 
-    except IOError:
+    except (IOError, OSError):
         # File read error
         return ''
 

@@ -48,8 +48,8 @@ export interface FilterOptions {
 }
 
 export interface WebSocketMessage {
-  type: 'initial' | 'event' | 'hitl_response';
-  data: HookEvent | HookEvent[] | HumanInTheLoopResponse;
+  type: 'initial' | 'event' | 'hitl_response' | 'hud_update';
+  data: HookEvent | HookEvent[] | HumanInTheLoopResponse | HudData;
 }
 
 export type TimeRange = '1m' | '3m' | '5m' | '10m';
@@ -73,4 +73,59 @@ export interface ChartConfig {
     axis: string;
     text: string;
   };
+}
+
+// Session tracking
+export interface SessionInfo {
+  agentId: string;           // "source_app:session_id[0:8]"
+  sourceApp: string;         // e.g., "FabricationSample"
+  sessionId: string;
+  sessionIdShort: string;    // first 8 chars
+  modelName: string | null;  // e.g., "claude-opus-4-6"
+  status: 'active' | 'idle';
+  firstEventTime: number;
+  lastEventTime: number;
+  eventCount: number;
+  lastToolUsed: string | null;
+  toolCount: number;
+  eventTypes: Record<string, number>;
+}
+
+// Tool analytics
+export interface ToolStat {
+  toolName: string;
+  preToolUseCount: number;
+  postToolUseCount: number;
+  postToolUseFailureCount: number;
+  successRate: number;
+}
+
+export interface EventTypeDistribution {
+  eventType: string;
+  count: number;
+  percentage: number;
+}
+
+export interface SessionRanking {
+  agentId: string;
+  sourceApp: string;
+  eventCount: number;
+  toolCount: number;
+}
+
+export interface ToolAnalyticsData {
+  toolStats: ToolStat[];
+  eventDistribution: EventTypeDistribution[];
+  sessionRankings: SessionRanking[];
+  eventsPerMinute: { timestamp: number; rate: number }[];
+}
+
+// Claude HUD data
+export interface HudData {
+  planName: string | null;
+  fiveHour: number | null;
+  sevenDay: number | null;
+  fiveHourResetAt: number | null;
+  sevenDayResetAt: number | null;
+  timestamp: number;
 }
