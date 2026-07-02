@@ -133,8 +133,22 @@ const formatGap = (gapMs: number): string => {
 };
 
 // Extract app name and session ID from agent ID for display
-const appName = computed(() => props.agentName.split(':')[0]);
+const rawAppName = computed(() => props.agentName.split(':')[0]);
 const sessionId = computed(() => props.agentName.split(':')[1]);
+
+// Resolve agent type from SubagentStart events (e.g., "codebro", "fabbro")
+const agentType = computed(() => {
+  const [targetApp, targetSession] = props.agentName.split(':');
+  const startEvent = props.events.find(
+    e => e.hook_event_type === 'SubagentStart'
+      && e.source_app === targetApp
+      && e.session_id.slice(0, 8) === targetSession
+      && e.payload?.agent_type
+  );
+  return startEvent?.payload?.agent_type || null;
+});
+
+const appName = computed(() => agentType.value || rawAppName.value);
 
 // Get model name from most recent event for this agent
 const modelName = computed(() => {

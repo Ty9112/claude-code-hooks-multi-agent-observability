@@ -82,6 +82,7 @@ export interface SessionInfo {
   sessionId: string;
   sessionIdShort: string;    // first 8 chars
   modelName: string | null;  // e.g., "claude-opus-4-6"
+  agentType: string | null;  // e.g., "codebro", "fabbro" — from SubagentStart
   status: 'active' | 'idle';
   firstEventTime: number;
   lastEventTime: number;

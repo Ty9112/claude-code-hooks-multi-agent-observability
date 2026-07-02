@@ -73,11 +73,11 @@ const agents = computed<OfficeAgent[]>(() =>
     agentId: s.agentId,
     sourceApp: s.sourceApp,
     status: s.status,
-    color: getHexColorForApp(s.sourceApp),
+    color: getHexColorForApp(s.agentType || s.sourceApp),
     lastToolEmoji: s.lastToolUsed ? getEmojiForToolName(s.lastToolUsed) : '',
     lastToolName: s.lastToolUsed || '',
     eventCount: s.eventCount,
-    name: getDisplayName(s.agentId),
+    name: getDisplayName(s.agentId, s.agentType),
   }))
 );
 

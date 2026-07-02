@@ -179,7 +179,7 @@ const editingAlias = ref(false);
 const aliasValue = ref('');
 const aliasInput = ref<HTMLInputElement>();
 
-const displayName = computed(() => getDisplayName(props.session.agentId));
+const displayName = computed(() => getDisplayName(props.session.agentId, props.session.agentType));
 
 function startEditAlias() {
   aliasValue.value = getAlias(props.session.agentId) || '';

@@ -49,6 +49,7 @@ export function useSessionTracker(events: () => HookEvent[]) {
           sessionId: event.session_id,
           sessionIdShort,
           modelName: event.model_name || null,
+          agentType: null,
           status: 'idle',
           firstEventTime: event.timestamp,
           lastEventTime: event.timestamp,
@@ -58,6 +59,10 @@ export function useSessionTracker(events: () => HookEvent[]) {
           eventTypes: {},
         };
         sessionMap.set(agentId, session);
+      }
+
+      if (event.hook_event_type === 'SubagentStart' && event.payload?.agent_type) {
+        session.agentType = event.payload.agent_type;
       }
 
       session.eventCount++;

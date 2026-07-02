@@ -25,8 +25,8 @@ function save() {
 export function useAgentAliases() {
   load();
 
-  function getDisplayName(agentId: string): string {
-    return aliases.get(agentId) || agentId;
+  function getDisplayName(agentId: string, agentType?: string | null): string {
+    return aliases.get(agentId) || agentType || agentId;
   }
 
   function setAlias(agentId: string, alias: string) {
