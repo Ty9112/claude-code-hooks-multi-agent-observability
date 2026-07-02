@@ -7,26 +7,40 @@
           Event Stream
         </h2>
 
-        <!-- Flat / Grouped toggle — pill buttons -->
-        <div class="flex items-center gap-0.5 bg-[var(--theme-bg-tertiary)] rounded p-0.5 border border-[var(--theme-border-primary)]">
+        <div class="flex items-center gap-2">
+          <!-- Auto-scroll toggle -->
           <button
-            @click="setViewMode('flat')"
-            class="px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider rounded transition-all duration-150"
-            :class="viewMode === 'flat'
-              ? 'bg-[var(--theme-primary)] text-[var(--theme-bg-primary)]'
-              : 'text-[var(--theme-text-quaternary)] hover:text-[var(--theme-text-secondary)]'"
+            @click="emit('update:stickToBottom', !stickToBottom)"
+            class="px-2 py-1 text-[10px] font-semibold uppercase tracking-wider rounded transition-all duration-150 border"
+            :class="stickToBottom
+              ? 'bg-[var(--theme-primary)] text-[var(--theme-bg-primary)] border-[var(--theme-primary)]'
+              : 'text-[var(--theme-text-quaternary)] border-[var(--theme-border-primary)] hover:text-[var(--theme-text-secondary)] hover:border-[var(--theme-text-quaternary)]'"
+            :title="stickToBottom ? 'Auto-scroll is ON — click to pause' : 'Auto-scroll is OFF — click to follow new events'"
           >
-            Flat
+            {{ stickToBottom ? 'LIVE' : 'PAUSED' }}
           </button>
-          <button
-            @click="setViewMode('grouped')"
-            class="px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider rounded transition-all duration-150"
-            :class="viewMode === 'grouped'
-              ? 'bg-[var(--theme-primary)] text-[var(--theme-bg-primary)]'
-              : 'text-[var(--theme-text-quaternary)] hover:text-[var(--theme-text-secondary)]'"
-          >
-            Grouped
-          </button>
+
+          <!-- Flat / Grouped toggle — pill buttons -->
+          <div class="flex items-center gap-0.5 bg-[var(--theme-bg-tertiary)] rounded p-0.5 border border-[var(--theme-border-primary)]">
+            <button
+              @click="setViewMode('flat')"
+              class="px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider rounded transition-all duration-150"
+              :class="viewMode === 'flat'
+                ? 'bg-[var(--theme-primary)] text-[var(--theme-bg-primary)]'
+                : 'text-[var(--theme-text-quaternary)] hover:text-[var(--theme-text-secondary)]'"
+            >
+              Flat
+            </button>
+            <button
+              @click="setViewMode('grouped')"
+              class="px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider rounded transition-all duration-150"
+              :class="viewMode === 'grouped'
+                ? 'bg-[var(--theme-primary)] text-[var(--theme-bg-primary)]'
+                : 'text-[var(--theme-text-quaternary)] hover:text-[var(--theme-text-secondary)]'"
+            >
+              Grouped
+            </button>
+          </div>
         </div>
       </div>
 
@@ -49,7 +63,7 @@
           :title="`${isAgentActive(agentId) ? 'Active: Click to add' : 'Sleeping: No recent events. Click to add'} ${agentId} to comparison lanes`"
         >
           <span class="mr-2">{{ isAgentActive(agentId) ? '✨' : '😴' }}</span>
-          <span class="font-mono text-sm">{{ agentId }}</span>
+          <span class="font-mono text-sm">{{ getDisplayName(agentId) }}</span>
         </button>
       </div>
 
@@ -97,24 +111,26 @@
       class="flex-1 overflow-y-auto px-3 py-3 mobile:px-2 mobile:py-1.5 relative"
       @scroll="handleScroll"
     >
-      <!-- Flat Mode -->
+      <!-- Flat Mode — virtual scrolled -->
       <template v-if="viewMode === 'flat'">
-        <TransitionGroup
-          name="event"
-          tag="div"
-          class="space-y-2 mobile:space-y-1.5"
-        >
-          <EventRow
-            v-for="event in filteredEvents"
-            :key="`${event.id}-${event.timestamp}`"
-            :event="event"
-            :gradient-class="getGradientForSession(event.session_id)"
-            :color-class="getColorForSession(event.session_id)"
-            :app-gradient-class="getGradientForApp(event.source_app)"
-            :app-color-class="getColorForApp(event.source_app)"
-            :app-hex-color="getHexColorForApp(event.source_app)"
-          />
-        </TransitionGroup>
+        <div :style="{ height: totalHeight + 'px', position: 'relative' }">
+          <div :style="{ transform: `translateY(${offsetY}px)` }">
+            <div
+              v-for="{ item: event } in visibleItems"
+              :key="`${event.id}-${event.timestamp}`"
+              :style="{ height: ITEM_HEIGHT + 'px', boxSizing: 'border-box', paddingBottom: '8px' }"
+            >
+              <EventRow
+                :event="event"
+                :gradient-class="getGradientForSession(event.session_id)"
+                :color-class="getColorForSession(event.session_id)"
+                :app-gradient-class="getGradientForApp(event.source_app)"
+                :app-color-class="getColorForApp(event.source_app)"
+                :app-hex-color="getHexColorForApp(event.source_app)"
+              />
+            </div>
+          </div>
+        </div>
       </template>
 
       <!-- Grouped Mode -->
@@ -131,7 +147,7 @@
               @toggle="toggleGroup(group.agentId)"
             />
             <Transition name="collapse">
-              <div v-if="expandedGroups.has(group.agentId)" class="mt-1 ml-3 mobile:ml-2 space-y-2 mobile:space-y-1.5 border-l-2 pl-3 mobile:pl-2" :style="{ borderColor: getHexColorForApp(group.sourceApp) + '44' }">
+              <div v-if="expandedGroups.has(group.agentId)" class="mt-1 ml-4 mobile:ml-2 space-y-2 mobile:space-y-1.5 border-l pl-3 mobile:pl-2" :style="{ borderColor: getHexColorForApp(group.sourceApp) + '4d' }">
                 <EventRow
                   v-for="event in group.events"
                   :key="`${event.id}-${event.timestamp}`"
@@ -164,6 +180,10 @@ import EventRow from './EventRow.vue';
 import EventGroupHeader from './EventGroupHeader.vue';
 import { useEventColors } from '../composables/useEventColors';
 import { useEventSearch } from '../composables/useEventSearch';
+import { useVirtualScroll } from '../composables/useVirtualScroll';
+import { useAgentAliases } from '../composables/useAgentAliases';
+
+const ITEM_HEIGHT = 72; // px per EventRow (measured ~68-76px)
 
 const props = defineProps<{
   events: HookEvent[];
@@ -182,9 +202,10 @@ const emit = defineEmits<{
   selectAgent: [agentName: string];
 }>();
 
-const scrollContainer = ref<HTMLElement>();
+const scrollContainer = ref<HTMLElement | null>(null);
 const { getGradientForSession, getColorForSession, getGradientForApp, getColorForApp, getHexColorForApp } = useEventColors();
 const { searchPattern, searchError, searchEvents, updateSearchPattern, clearSearch } = useEventSearch();
+const { getDisplayName } = useAgentAliases();
 
 // View mode: flat or grouped
 const VIEW_MODE_KEY = 'event-timeline-view-mode';
@@ -250,6 +271,14 @@ const filteredEvents = computed(() => {
   return filtered;
 });
 
+// Virtual scroll for flat mode
+const { visibleItems, totalHeight, offsetY, onScroll: vsOnScroll, scrollToEnd } = useVirtualScroll({
+  items: filteredEvents,
+  itemHeight: ITEM_HEIGHT,
+  containerRef: scrollContainer,
+  overscan: 5,
+});
+
 // Grouped events by agent
 interface EventGroup {
   agentId: string;
@@ -300,13 +329,10 @@ watch(groupedEvents, (groups) => {
   }
 }, { immediate: true });
 
-const scrollToBottom = () => {
-  if (scrollContainer.value) {
-    scrollContainer.value.scrollTop = scrollContainer.value.scrollHeight;
-  }
-};
+const handleScroll = (e: Event) => {
+  // Forward to virtual scroll
+  vsOnScroll(e);
 
-const handleScroll = () => {
   if (!scrollContainer.value) return;
 
   const { scrollTop, scrollHeight, clientHeight } = scrollContainer.value;
@@ -320,36 +346,18 @@ const handleScroll = () => {
 watch(() => props.events.length, async () => {
   if (props.stickToBottom) {
     await nextTick();
-    scrollToBottom();
+    scrollToEnd();
   }
 });
 
 watch(() => props.stickToBottom, (shouldStick) => {
   if (shouldStick) {
-    scrollToBottom();
+    scrollToEnd();
   }
 });
 </script>
 
 <style scoped>
-.event-enter-active {
-  transition: all 0.3s ease;
-}
-
-.event-enter-from {
-  opacity: 0;
-  transform: translateY(-20px);
-}
-
-.event-leave-active {
-  transition: all 0.3s ease;
-}
-
-.event-leave-to {
-  opacity: 0;
-  transform: translateY(20px);
-}
-
 .collapse-enter-active,
 .collapse-leave-active {
   transition: all 0.25s ease;

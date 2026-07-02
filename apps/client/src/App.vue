@@ -69,6 +69,53 @@
             DOCK ALL
           </button>
 
+          <!-- Panel menu dropdown -->
+          <div class="relative">
+            <button
+              @click="showPanelMenu = !showPanelMenu"
+              class="px-2.5 py-1.5 mobile:p-1 rounded text-[11px] font-semibold tracking-wide border transition-all duration-150 bg-[var(--theme-bg-tertiary)] border-[var(--theme-border-secondary)] text-[var(--theme-text-secondary)] hover:bg-[var(--theme-hover-bg)] hover:border-[var(--theme-primary)] hover:text-[var(--theme-primary)]"
+              title="Panel visibility & layout"
+            >
+              PANELS
+            </button>
+            <div
+              v-if="showPanelMenu"
+              class="absolute right-0 top-full mt-1 w-56 rounded-lg border border-[var(--theme-border-secondary)] bg-[#0c1528] shadow-xl z-50 py-1"
+              style="box-shadow: 0 8px 32px rgba(0,0,0,0.5);"
+            >
+              <!-- Quick actions -->
+              <div class="flex gap-1 px-2 py-1.5 border-b border-[var(--theme-border-primary)]">
+                <button
+                  @click="panelManager.expandAll()"
+                  class="flex-1 px-2 py-1 rounded text-[9px] font-semibold uppercase tracking-wider border border-[var(--theme-border-secondary)] text-[var(--theme-text-quaternary)] hover:border-[var(--theme-primary)] hover:text-[var(--theme-primary)] transition-colors"
+                >EXPAND ALL</button>
+                <button
+                  @click="panelManager.collapseAll()"
+                  class="flex-1 px-2 py-1 rounded text-[9px] font-semibold uppercase tracking-wider border border-[var(--theme-border-secondary)] text-[var(--theme-text-quaternary)] hover:border-[var(--theme-primary)] hover:text-[var(--theme-primary)] transition-colors"
+                >COLLAPSE ALL</button>
+              </div>
+              <!-- Panel list (ordered) -->
+              <div
+                v-for="p in panelManager.orderedPanels.value"
+                :key="p.id"
+                class="flex items-center justify-between px-3 py-1.5 hover:bg-[var(--theme-hover-bg)] transition-colors cursor-pointer"
+                @click="panelManager.toggleHidden(p.id)"
+              >
+                <div class="flex items-center gap-2 min-w-0">
+                  <span
+                    class="w-2 h-2 rounded-full shrink-0"
+                    :class="p.hidden ? 'bg-[var(--theme-text-quaternary)] opacity-30' : (p.docked ? 'bg-[var(--theme-primary)]' : 'bg-[var(--theme-accent-warning)]')"
+                  ></span>
+                  <span class="font-label text-[10px] uppercase tracking-wider truncate" :class="p.hidden ? 'text-[var(--theme-text-quaternary)] line-through' : 'text-[var(--theme-text-secondary)]'">
+                    {{ p.title }}
+                  </span>
+                </div>
+                <span v-if="!p.docked && !p.hidden" class="text-[8px] text-[var(--theme-accent-warning)] font-mono uppercase">float</span>
+                <span v-if="p.collapsed && !p.hidden" class="text-[8px] text-[var(--theme-text-quaternary)] font-mono uppercase">min</span>
+              </div>
+            </div>
+          </div>
+
           <button
             @click="handleThemeManagerClick"
             class="px-2.5 py-1.5 mobile:p-1 rounded text-[11px] font-semibold tracking-wide border transition-all duration-150 bg-[var(--theme-bg-tertiary)] border-[var(--theme-border-secondary)] text-[var(--theme-text-secondary)] hover:bg-[var(--theme-hover-bg)] hover:border-[var(--theme-primary)] hover:text-[var(--theme-primary)]"
@@ -79,7 +126,7 @@
         </div>
       </div>
     </header>
-    
+
     <!-- Filters -->
     <FilterPanel
       v-if="showFilters"
@@ -87,7 +134,7 @@
       :filters="filters"
       @update:filters="filters = $event"
     />
-    
+
     <!-- Live Pulse Chart -->
     <LivePulseChart
       :events="events"
@@ -100,74 +147,89 @@
     <!-- KPI Row -->
     <KpiRow :metrics="kpiMetrics" />
 
-    <!-- Session Overview Cards -->
-    <DockablePanel panel-id="sessions" title="Sessions" :default-width="700" :default-height="350">
-      <SessionOverviewCards
-        v-if="sessions.length > 0"
-        :sessions="sessions"
-        @toggle-lane="toggleAgentLane"
-      />
-    </DockablePanel>
+    <!-- Dockable Panels — dynamic order from panelManager -->
+    <div class="flex-1 overflow-y-auto overflow-x-hidden" @click="showPanelMenu = false">
+      <template v-for="pDef in sortedPanelDefs" :key="pDef.id">
+        <!-- Sessions -->
+        <DockablePanel v-if="pDef.id === 'sessions'" panel-id="sessions" title="Sessions" :default-width="700" :default-height="350" :default-docked-height="200">
+          <SessionOverviewCards
+            v-if="sessions.length > 0"
+            :sessions="sessions"
+            @toggle-lane="toggleAgentLane"
+          />
+        </DockablePanel>
 
-    <!-- Agent Teams Panel (conditional on team activity) -->
-    <DockablePanel v-if="hasTeamActivity" panel-id="agent-teams" title="Agent Teams" :default-width="800" :default-height="450">
-      <AgentTeamsPanel
-        :tasks="tasks"
-        :team-agents="teamAgents"
-        :messages="messages"
-        :team-name="teamName"
-        @select-agent="toggleAgentLane"
-      />
-    </DockablePanel>
+        <!-- Agent Teams (conditional) -->
+        <DockablePanel v-else-if="pDef.id === 'agent-teams' && hasTeamActivity" panel-id="agent-teams" title="Agent Teams" :default-width="800" :default-height="450" :default-docked-height="320">
+          <AgentTeamsPanel
+            :tasks="tasks"
+            :team-agents="teamAgents"
+            :messages="messages"
+            :team-name="teamName"
+            @select-agent="toggleAgentLane"
+          />
+        </DockablePanel>
 
-    <!-- Agent Swim Lane Container (below pulse chart, full width, hidden when empty) -->
-    <DockablePanel panel-id="swim-lanes" title="Swim Lanes" :default-width="900" :default-height="450">
-      <div v-if="selectedAgentLanes.length > 0" class="w-full bg-[var(--theme-bg-secondary)] px-3 py-4 mobile:px-2 mobile:py-2 overflow-hidden">
-        <AgentSwimLaneContainer
-          :selected-agents="selectedAgentLanes"
-          :events="events"
-          :time-range="currentTimeRange"
-          @update:selected-agents="selectedAgentLanes = $event"
-        />
-      </div>
-    </DockablePanel>
+        <!-- Swim Lanes -->
+        <DockablePanel v-else-if="pDef.id === 'swim-lanes'" panel-id="swim-lanes" title="Swim Lanes" :default-width="900" :default-height="450" :default-docked-height="300">
+          <div v-if="selectedAgentLanes.length > 0" class="w-full bg-[var(--theme-bg-secondary)] px-3 py-4 mobile:px-2 mobile:py-2 overflow-hidden">
+            <AgentSwimLaneContainer
+              :selected-agents="selectedAgentLanes"
+              :events="events"
+              :time-range="currentTimeRange"
+              @update:selected-agents="selectedAgentLanes = $event"
+            />
+          </div>
+        </DockablePanel>
 
-    <!-- Claude HUD Card -->
-    <DockablePanel panel-id="hud" title="Claude HUD" :default-width="400" :default-height="300">
-      <ClaudeHudCard />
-    </DockablePanel>
+        <!-- Claude HUD -->
+        <DockablePanel v-else-if="pDef.id === 'hud'" panel-id="hud" title="Claude HUD" :default-width="400" :default-height="300" :default-docked-height="180">
+          <ClaudeHudCard />
+        </DockablePanel>
 
-    <!-- Tool Analytics -->
-    <DockablePanel panel-id="analytics" title="Analytics" :default-width="900" :default-height="500">
-      <ToolAnalytics
-        v-if="events.length > 0"
-        :analytics="analytics"
-        :events="events"
-        @filter="handleAnalyticsFilter"
-      />
-    </DockablePanel>
+        <!-- Analytics -->
+        <DockablePanel v-else-if="pDef.id === 'analytics'" panel-id="analytics" title="Analytics" :default-width="900" :default-height="500" :default-docked-height="350">
+          <ToolAnalytics
+            v-if="events.length > 0"
+            :analytics="analytics"
+            :events="events"
+            @filter="handleAnalyticsFilter"
+          />
+        </DockablePanel>
 
-    <!-- Timeline -->
-    <DockablePanel panel-id="timeline" title="Event Stream" :default-width="700" :default-height="500">
-      <div class="flex flex-col flex-1 overflow-hidden" style="min-height: 300px;">
-        <EventTimeline
-          :events="events"
-          :filters="filters"
-          :unique-app-names="uniqueAppNames"
-          :all-app-names="allAppNames"
-          v-model:stick-to-bottom="stickToBottom"
-          @select-agent="toggleAgentLane"
-        />
-      </div>
-    </DockablePanel>
-    
+        <!-- Toolkit -->
+        <DockablePanel v-else-if="pDef.id === 'toolkit'" panel-id="toolkit" title="Toolkit" :default-width="850" :default-height="500" :default-docked-height="350">
+          <ToolkitPanel />
+        </DockablePanel>
+
+        <!-- Event Stream -->
+        <DockablePanel v-else-if="pDef.id === 'timeline'" panel-id="timeline" title="Event Stream" :default-width="700" :default-height="500" :default-docked-height="400">
+          <div class="flex flex-col flex-1 overflow-hidden h-full">
+            <EventTimeline
+              :events="events"
+              :filters="filters"
+              :unique-app-names="uniqueAppNames"
+              :all-app-names="allAppNames"
+              v-model:stick-to-bottom="stickToBottom"
+              @select-agent="toggleAgentLane"
+            />
+          </div>
+        </DockablePanel>
+
+        <!-- Agent Office (now a dockable panel) -->
+        <DockablePanel v-else-if="pDef.id === 'agent-office'" panel-id="agent-office" title="Agent Office" :default-width="900" :default-height="600" :default-docked-height="400">
+          <AgentOffice :sessions="sessions" />
+        </DockablePanel>
+      </template>
+    </div>
+
     <!-- Stick to bottom button -->
     <StickScrollButton
       class="short:hidden"
       :stick-to-bottom="stickToBottom"
       @toggle="stickToBottom = !stickToBottom"
     />
-    
+
     <!-- Error message -->
     <div
       v-if="error"
@@ -175,7 +237,7 @@
     >
       {{ error }}
     </div>
-    
+
     <!-- Theme Manager -->
     <ThemeManager
       :is-open="showThemeManager"
@@ -195,7 +257,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { ref, computed, watch } from 'vue';
 import type { TimeRange } from './types';
 import { useWebSocket } from './composables/useWebSocket';
 import { useThemes } from './composables/useThemes';
@@ -220,6 +282,8 @@ import ClaudeHudCard from './components/ClaudeHudCard.vue';
 import DockablePanel from './components/DockablePanel.vue';
 import ExportMenu from './components/ExportMenu.vue';
 import AgentTeamsPanel from './components/AgentTeamsPanel.vue';
+import AgentOffice from './components/AgentOffice.vue';
+import ToolkitPanel from './components/ToolkitPanel.vue';
 import { WS_URL } from './config';
 
 // WebSocket connection
@@ -250,6 +314,26 @@ const { tasks, teamAgents, messages, teamName, hasTeamActivity } = useTeamOrches
 // Panel management
 const panelManager = usePanelManager();
 
+// Panel definitions — order is the default, persisted order overrides
+const panelDefs = [
+  { id: 'sessions' },
+  { id: 'agent-teams' },
+  { id: 'swim-lanes' },
+  { id: 'hud' },
+  { id: 'analytics' },
+  { id: 'toolkit' },
+  { id: 'timeline' },
+  { id: 'agent-office' },
+];
+
+const sortedPanelDefs = computed(() => {
+  return [...panelDefs].sort((a, b) => {
+    const pa = panelManager.getPanel(a.id);
+    const pb = panelManager.getPanel(b.id);
+    return (pa?.order ?? 999) - (pb?.order ?? 999);
+  });
+});
+
 // Filters
 const filters = ref({
   sourceApp: '',
@@ -261,6 +345,7 @@ const filters = ref({
 const stickToBottom = ref(true);
 const showThemeManager = ref(false);
 const showFilters = ref(false);
+const showPanelMenu = ref(false);
 const uniqueAppNames = ref<string[]>([]); // Apps active in current time window
 const allAppNames = ref<string[]>([]); // All apps ever seen in session
 const selectedAgentLanes = ref<string[]>([]);

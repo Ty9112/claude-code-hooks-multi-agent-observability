@@ -1,57 +1,76 @@
 <template>
-  <div class="bg-gradient-to-r from-[var(--theme-bg-primary)] to-[var(--theme-bg-secondary)] px-3 py-4 mobile:py-2 shadow-lg">
-    <div class="flex items-center justify-between mb-3 mobile:mb-2">
-      <div class="flex items-center gap-3 mobile:gap-2">
-        <h3 class="text-base mobile:text-xs font-bold text-[var(--theme-primary)] drop-shadow-sm flex items-center">
-          <span class="mr-1.5 mobile:mr-1 text-xl mobile:text-sm">📊</span>
-          <span class="mobile:hidden">Live Activity Pulse</span>
-        </h3>
+  <div class="bg-[var(--theme-bg-primary)] px-3 py-3 mobile:py-2 border-b border-[var(--theme-border-primary)]">
+    <div class="flex items-center justify-between mb-2.5 mobile:mb-1.5">
+      <div class="flex items-center gap-2.5 mobile:gap-1.5">
+        <!-- Title -->
+        <div class="flex items-center gap-1.5">
+          <svg class="w-4 h-4 text-[var(--theme-primary)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+          </svg>
+          <span class="mobile:hidden text-sm font-semibold text-[var(--theme-text-primary)] tracking-wide">Activity</span>
+        </div>
+
+        <!-- Metric pills -->
         <div class="flex items-center gap-1.5 flex-wrap">
+          <!-- Agents -->
           <div
-            class="flex items-center gap-1.5 px-2 py-1 bg-gradient-to-r from-[var(--theme-primary)]/10 to-[var(--theme-primary-light)]/10 rounded-lg border border-[var(--theme-primary)]/30 shadow-sm"
+            class="flex items-center gap-1 px-2 py-0.5 rounded border border-[var(--theme-primary)]/25 bg-[var(--theme-primary)]/8"
             :title="`${uniqueAgentCount} active agent${uniqueAgentCount !== 1 ? 's' : ''}`"
           >
-            <span class="text-lg mobile:text-base">👥</span>
-            <span class="text-sm mobile:text-xs font-bold text-[var(--theme-primary)]">{{ uniqueAgentCount }}</span>
-            <span class="text-xs mobile:text-[10px] text-[var(--theme-text-tertiary)] font-medium mobile:hidden">agents</span>
+            <svg class="w-3.5 h-3.5 text-[var(--theme-primary)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M22 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" />
+            </svg>
+            <span class="text-xs font-bold text-[var(--theme-primary)] tabular-nums">{{ uniqueAgentCount }}</span>
+            <span class="text-[10px] text-[var(--theme-text-tertiary)] mobile:hidden">agents</span>
           </div>
+          <!-- Events -->
           <div
-            class="flex items-center gap-1.5 px-2 py-1 bg-[var(--theme-bg-tertiary)] rounded-lg border border-[var(--theme-border-primary)] shadow-sm"
-            :title="`Total events in the last ${timeRange === '1m' ? '1 minute' : timeRange === '3m' ? '3 minutes' : timeRange === '5m' ? '5 minutes' : '10 minutes'}`"
+            class="flex items-center gap-1 px-2 py-0.5 rounded border border-[var(--theme-border-primary)] bg-[var(--theme-bg-tertiary)]"
+            :title="`Total events in window`"
           >
-            <span class="text-lg mobile:text-base">⚡</span>
-            <span class="text-sm mobile:text-xs font-bold text-[var(--theme-text-primary)]">{{ totalEventCount }}</span>
-            <span class="text-xs mobile:text-[10px] text-[var(--theme-text-tertiary)] font-medium mobile:hidden">events</span>
+            <svg class="w-3.5 h-3.5 text-[var(--theme-accent-warning)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+            </svg>
+            <span class="text-xs font-bold text-[var(--theme-text-primary)] tabular-nums">{{ totalEventCount }}</span>
+            <span class="text-[10px] text-[var(--theme-text-tertiary)] mobile:hidden">events</span>
           </div>
+          <!-- Tools -->
           <div
-            class="flex items-center gap-1.5 px-2 py-1 bg-[var(--theme-bg-tertiary)] rounded-lg border border-[var(--theme-border-primary)] shadow-sm"
-            :title="`Total tool calls in the last ${timeRange === '1m' ? '1 minute' : timeRange === '3m' ? '3 minutes' : timeRange === '5m' ? '5 minutes' : '10 minutes'}`"
+            class="flex items-center gap-1 px-2 py-0.5 rounded border border-[var(--theme-border-primary)] bg-[var(--theme-bg-tertiary)]"
+            :title="`Total tool calls in window`"
           >
-            <span class="text-lg mobile:text-base">🔧</span>
-            <span class="text-sm mobile:text-xs font-bold text-[var(--theme-text-primary)]">{{ toolCallCount }}</span>
-            <span class="text-xs mobile:text-[10px] text-[var(--theme-text-tertiary)] font-medium mobile:hidden">tools</span>
+            <svg class="w-3.5 h-3.5 text-[var(--theme-text-secondary)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" />
+            </svg>
+            <span class="text-xs font-bold text-[var(--theme-text-primary)] tabular-nums">{{ toolCallCount }}</span>
+            <span class="text-[10px] text-[var(--theme-text-tertiary)] mobile:hidden">tools</span>
           </div>
+          <!-- Avg gap -->
           <div
-            class="flex items-center gap-1.5 px-2 py-1 bg-[var(--theme-bg-tertiary)] rounded-lg border border-[var(--theme-border-primary)] shadow-sm"
-            :title="`Average time between events in the last ${timeRange === '1m' ? '1 minute' : timeRange === '3m' ? '3 minutes' : timeRange === '5m' ? '5 minutes' : '10 minutes'}`"
+            class="flex items-center gap-1 px-2 py-0.5 rounded border border-[var(--theme-border-primary)] bg-[var(--theme-bg-tertiary)]"
+            :title="`Average time between events`"
           >
-            <span class="text-lg mobile:text-base">🕐</span>
-            <span class="text-sm mobile:text-xs font-bold text-[var(--theme-text-primary)]">{{ formatGap(eventTimingMetrics.avgGap) }}</span>
-            <span class="text-xs mobile:text-[10px] text-[var(--theme-text-tertiary)] font-medium mobile:hidden">avg gap</span>
+            <svg class="w-3.5 h-3.5 text-[var(--theme-text-secondary)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" />
+            </svg>
+            <span class="text-xs font-bold text-[var(--theme-text-primary)] tabular-nums">{{ formatGap(eventTimingMetrics.avgGap) }}</span>
+            <span class="text-[10px] text-[var(--theme-text-tertiary)] mobile:hidden">avg</span>
           </div>
         </div>
       </div>
-      <div class="flex gap-1.5 mobile:gap-1" role="tablist" aria-label="Time range selector">
+
+      <!-- Time range buttons -->
+      <div class="flex gap-1 mobile:gap-0.5" role="tablist" aria-label="Time range selector">
         <button
           v-for="(range, index) in timeRanges"
           :key="range"
           @click="setTimeRange(range)"
           @keydown="handleTimeRangeKeyDown($event, index)"
           :class="[
-            'px-3 py-1.5 mobile:px-2 mobile:py-1 text-sm mobile:text-xs font-bold rounded-lg transition-all duration-200 min-w-[30px] mobile:min-w-[24px] min-h-[30px] mobile:min-h-[24px] flex items-center justify-center shadow-md hover:shadow-lg transform hover:scale-105 border',
+            'px-2.5 py-1 mobile:px-1.5 mobile:py-0.5 text-[11px] mobile:text-[10px] font-semibold rounded transition-all duration-150 border',
             timeRange === range
-              ? 'bg-gradient-to-r from-[var(--theme-primary)] to-[var(--theme-primary-light)] text-white border-[var(--theme-primary-dark)] drop-shadow-md'
-              : 'bg-[var(--theme-bg-tertiary)] text-[var(--theme-text-primary)] border-[var(--theme-border-primary)] hover:bg-[var(--theme-bg-quaternary)] hover:border-[var(--theme-primary)]'
+              ? 'bg-[var(--theme-primary)] text-white border-[var(--theme-primary)]'
+              : 'bg-[var(--theme-bg-tertiary)] text-[var(--theme-text-secondary)] border-[var(--theme-border-primary)] hover:border-[var(--theme-primary)] hover:text-[var(--theme-primary)]'
           ]"
           role="tab"
           :aria-selected="timeRange === range"
@@ -74,7 +93,7 @@
       ></canvas>
       <div
         v-if="tooltip.visible"
-        class="absolute bg-gradient-to-r from-[var(--theme-primary)] to-[var(--theme-primary-dark)] text-white px-2 py-1.5 mobile:px-3 mobile:py-2 rounded-lg text-xs mobile:text-sm pointer-events-none z-10 shadow-lg border border-[var(--theme-primary-light)] font-bold drop-shadow-md"
+        class="absolute bg-[var(--theme-bg-primary)] text-[var(--theme-text-primary)] px-2.5 py-1.5 rounded text-[11px] pointer-events-none z-10 shadow-lg border border-[var(--theme-border-secondary)] font-mono-data"
         :style="{ left: tooltip.x + 'px', top: tooltip.y + 'px' }"
       >
         {{ tooltip.text }}
@@ -83,10 +102,12 @@
         v-if="!hasData"
         class="absolute inset-0 flex items-center justify-center"
       >
-        <p class="text-[var(--theme-text-tertiary)] mobile:text-sm text-base font-semibold">
-          <span class="mr-1.5 text-base">⏳</span>
-          Waiting for events...
-        </p>
+        <div class="flex items-center gap-2 text-[var(--theme-text-tertiary)]">
+          <svg class="w-4 h-4 animate-pulse" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" />
+          </svg>
+          <span class="text-sm font-medium">Waiting for events...</span>
+        </div>
       </div>
     </div>
   </div>

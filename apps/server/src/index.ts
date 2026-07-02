@@ -473,6 +473,142 @@ const server = Bun.serve({
       });
     }
 
+    // Toolkit API endpoints
+
+    // GET /api/toolkit/skills — read installed_plugins.json, scan each plugin's install path
+    if (url.pathname === '/api/toolkit/skills' && req.method === 'GET') {
+      try {
+        const homeDir = process.env.HOME || process.env.USERPROFILE || '';
+        const installedPath = `${homeDir}/.claude/plugins/installed_plugins.json`;
+        const installedFile = Bun.file(installedPath);
+        const results: {
+          name: string;
+          description: string;
+          pluginName: string;
+          author: string;
+          type: 'command' | 'agent' | 'skill';
+        }[] = [];
+
+        if (await installedFile.exists()) {
+          const installed = await installedFile.json();
+          const plugins = installed.plugins || {};
+          const { readdirSync, existsSync } = require('fs');
+
+          for (const [pluginKey, installs] of Object.entries(plugins)) {
+            try {
+              // Use the first installation entry
+              const install = (installs as any[])[0];
+              if (!install?.installPath) continue;
+              const installDir = install.installPath.replace(/\\/g, '/');
+
+              // Read .claude-plugin/plugin.json manifest
+              const manifestPath = `${installDir}/.claude-plugin/plugin.json`;
+              const manifestFile = Bun.file(manifestPath);
+              let pluginName = pluginKey.split('@')[0];
+              let pluginDesc = '';
+              let pluginAuthor = '';
+
+              if (await manifestFile.exists()) {
+                const manifest = await manifestFile.json();
+                pluginName = manifest.name || pluginName;
+                pluginDesc = manifest.description || '';
+                pluginAuthor = manifest.author?.name || manifest.author || '';
+              }
+
+              // Scan commands/ directory for .md files
+              const commandsDir = `${installDir}/commands`;
+              if (existsSync(commandsDir)) {
+                try {
+                  const files = readdirSync(commandsDir).filter((f: string) => f.endsWith('.md'));
+                  for (const file of files) {
+                    const name = file.replace('.md', '');
+                    results.push({
+                      name,
+                      description: `Command from ${pluginName}`,
+                      pluginName,
+                      author: pluginAuthor,
+                      type: 'command',
+                    });
+                  }
+                } catch { /* skip */ }
+              }
+
+              // Scan agents/ directory for .md files
+              const agentsDir = `${installDir}/agents`;
+              if (existsSync(agentsDir)) {
+                try {
+                  const files = readdirSync(agentsDir).filter((f: string) => f.endsWith('.md'));
+                  for (const file of files) {
+                    const name = file.replace('.md', '');
+                    results.push({
+                      name,
+                      description: `Agent from ${pluginName}`,
+                      pluginName,
+                      author: pluginAuthor,
+                      type: 'agent',
+                    });
+                  }
+                } catch { /* skip */ }
+              }
+
+              // If no commands or agents found, add the plugin itself as a skill entry
+              const hasEntries = results.some(r => r.pluginName === pluginName);
+              if (!hasEntries) {
+                results.push({
+                  name: pluginName,
+                  description: pluginDesc,
+                  pluginName,
+                  author: pluginAuthor,
+                  type: 'skill',
+                });
+              }
+            } catch { /* skip invalid plugin */ }
+          }
+        }
+
+        return new Response(JSON.stringify(results), {
+          headers: { ...headers, 'Content-Type': 'application/json' }
+        });
+      } catch {
+        return new Response(JSON.stringify([]), {
+          headers: { ...headers, 'Content-Type': 'application/json' }
+        });
+      }
+    }
+
+    // GET /api/toolkit/mcp-servers — read mcpServers from ~/.claude/settings.json
+    if (url.pathname === '/api/toolkit/mcp-servers' && req.method === 'GET') {
+      try {
+        const homeDir = process.env.HOME || process.env.USERPROFILE || '';
+        const settingsPath = `${homeDir}/.claude/settings.json`;
+        const file = Bun.file(settingsPath);
+        const servers: { name: string; transport: string; command: string | null; args: string[]; url: string | null }[] = [];
+
+        if (await file.exists()) {
+          const settings = await file.json();
+          const mcpServers = settings.mcpServers || {};
+          for (const [name, config] of Object.entries(mcpServers)) {
+            const cfg = config as any;
+            servers.push({
+              name,
+              transport: cfg.transport || (cfg.command ? 'stdio' : cfg.url ? 'sse' : 'unknown'),
+              command: cfg.command || null,
+              args: cfg.args || [],
+              url: cfg.url || null,
+            });
+          }
+        }
+
+        return new Response(JSON.stringify(servers), {
+          headers: { ...headers, 'Content-Type': 'application/json' }
+        });
+      } catch {
+        return new Response(JSON.stringify([]), {
+          headers: { ...headers, 'Content-Type': 'application/json' }
+        });
+      }
+    }
+
     // WebSocket upgrade
     if (url.pathname === '/stream') {
       const success = server.upgrade(req);

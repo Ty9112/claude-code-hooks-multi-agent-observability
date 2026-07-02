@@ -67,10 +67,11 @@ def main():
     
     try:
         # Read hook data from stdin
-        input_data = json.load(sys.stdin)
-    except json.JSONDecodeError as e:
+        raw = sys.stdin.read()
+        input_data = json.loads(raw) if raw.strip() else {}
+    except (json.JSONDecodeError, ValueError) as e:
         print(f"Failed to parse JSON input: {e}", file=sys.stderr)
-        sys.exit(1)
+        input_data = {}
     
     # Extract model name from transcript (with caching)
     session_id = input_data.get('session_id', 'unknown')

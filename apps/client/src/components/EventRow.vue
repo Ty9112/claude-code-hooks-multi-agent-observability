@@ -33,7 +33,7 @@
           <span class="text-xs text-[var(--theme-text-secondary)] px-1.5 py-0.5 rounded-full border bg-[var(--theme-bg-tertiary)]/50 shadow-sm" :class="borderColorClass">
             {{ sessionIdShort }}
           </span>
-          <span class="text-xs text-[var(--theme-text-tertiary)] font-medium">
+          <span class="text-xs text-[var(--theme-text-tertiary)] font-medium tabular-nums">
             {{ formatTime(event.timestamp) }}
           </span>
         </div>
@@ -155,11 +155,11 @@
           >
             {{ event.source_app }}
           </span>
-          <span class="text-xs text-[var(--theme-text-tertiary)] font-medium">
+          <span class="text-xs text-[var(--theme-text-tertiary)] font-medium tabular-nums">
             {{ formatTime(event.timestamp) }}
           </span>
         </div>
-        
+
         <!-- Mobile: Session + Event Type on second row -->
         <div class="flex items-center space-x-2">
           <span class="text-xs text-[var(--theme-text-secondary)] px-1.5 py-0.5 rounded-full border bg-[var(--theme-bg-tertiary)]/50" :class="borderColorClass">
@@ -207,7 +207,7 @@
             {{ teamBadge.label }}
           </span>
         </div>
-        <span class="text-sm text-[var(--theme-text-tertiary)] font-semibold">
+        <span class="text-sm text-[var(--theme-text-tertiary)] font-semibold tabular-nums">
           {{ formatTime(event.timestamp) }}
         </span>
       </div>

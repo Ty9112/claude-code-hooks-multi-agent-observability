@@ -225,16 +225,22 @@ function renderAll() {
   }
 }
 
-// Re-render on hover to show highlight
-watch(hoveredId, () => {
-  if (!collapsed.value) renderAll();
-});
+// rAF-batched rendering — coalesce multiple triggers into a single frame
+let rafId: number | null = null;
 
-watch(() => props.analytics, () => {
-  if (!collapsed.value) {
-    nextTick(() => renderAll());
-  }
-}, { deep: true });
+function scheduleRender() {
+  if (collapsed.value) return;
+  if (rafId !== null) cancelAnimationFrame(rafId);
+  rafId = requestAnimationFrame(() => {
+    renderAll();
+    rafId = null;
+  });
+}
+
+// Re-render on hover to show highlight
+watch(hoveredId, scheduleRender);
+
+watch(() => props.analytics, scheduleRender, { deep: true });
 
 onMounted(() => {
   if (!collapsed.value) {
@@ -244,15 +250,14 @@ onMounted(() => {
 
 let resizeObserver: ResizeObserver | null = null;
 onMounted(() => {
-  resizeObserver = new ResizeObserver(() => {
-    if (!collapsed.value) renderAll();
-  });
+  resizeObserver = new ResizeObserver(scheduleRender);
   const el = toolFreqCanvas.value?.parentElement?.parentElement?.parentElement;
   if (el) resizeObserver.observe(el);
 });
 
 onUnmounted(() => {
   if (resizeObserver) resizeObserver.disconnect();
+  if (rafId !== null) cancelAnimationFrame(rafId);
 });
 </script>
 

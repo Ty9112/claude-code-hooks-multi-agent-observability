@@ -6,6 +6,7 @@
 :root {
   /* Primary colors — Harris Blue */
   --theme-primary: #29ADE4;
+  --theme-primary-rgb: 41, 173, 228;
   --theme-primary-hover: #1e8fbe;
   --theme-primary-light: #1a2a4a;
   --theme-primary-dark: #0c6fa0;
@@ -50,6 +51,7 @@
 /* Harris Mission Control — explicit class for theme switching */
 .theme-harris-mission-control {
   --theme-primary: #29ADE4;
+  --theme-primary-rgb: 41, 173, 228;
   --theme-primary-hover: #1e8fbe;
   --theme-primary-light: #1a2a4a;
   --theme-primary-dark: #0c6fa0;
@@ -78,6 +80,7 @@
 /* Light theme */
 .theme-light {
   --theme-primary: #3b82f6;
+  --theme-primary-rgb: 59, 130, 246;
   --theme-primary-hover: #2563eb;
   --theme-primary-light: #dbeafe;
   --theme-primary-dark: #1e40af;
@@ -109,6 +112,7 @@
 .theme-dark {
   /* Primary colors */
   --theme-primary: #60a5fa;
+  --theme-primary-rgb: 96, 165, 250;
   --theme-primary-hover: #3b82f6;
   --theme-primary-light: #1e3a8a;
   --theme-primary-dark: #1d4ed8;
@@ -150,6 +154,7 @@
 .theme-modern {
   /* Primary colors */
   --theme-primary: #0ea5e9;
+  --theme-primary-rgb: 14, 165, 233;
   --theme-primary-hover: #0284c7;
   --theme-primary-light: #e0f2fe;
   --theme-primary-dark: #0c4a6e;
@@ -191,6 +196,7 @@
 .theme-earth {
   /* Primary colors */
   --theme-primary: #8b4513;
+  --theme-primary-rgb: 139, 69, 19;
   --theme-primary-hover: #a0522d;
   --theme-primary-light: #deb887;
   --theme-primary-dark: #654321;
@@ -232,6 +238,7 @@
 .theme-glass {
   /* Primary colors */
   --theme-primary: #8b5cf6;
+  --theme-primary-rgb: 139, 92, 246;
   --theme-primary-hover: #7c3aed;
   --theme-primary-light: #f3e8ff;
   --theme-primary-dark: #581c87;
@@ -273,6 +280,7 @@
 .theme-high-contrast {
   /* Primary colors */
   --theme-primary: #000000;
+  --theme-primary-rgb: 0, 0, 0;
   --theme-primary-hover: #333333;
   --theme-primary-light: #f0f0f0;
   --theme-primary-dark: #000000;
@@ -314,6 +322,7 @@
 .theme-dark-blue {
   /* Primary colors */
   --theme-primary: #0099ff;
+  --theme-primary-rgb: 0, 153, 255;
   --theme-primary-hover: #0077cc;
   --theme-primary-light: #33aaff;
   --theme-primary-dark: #0066cc;
@@ -355,6 +364,7 @@
 .theme-colorblind-friendly {
   /* Primary colors */
   --theme-primary: #993366;
+  --theme-primary-rgb: 153, 51, 102;
   --theme-primary-hover: #663344;
   --theme-primary-light: #cc6699;
   --theme-primary-dark: #661144;
@@ -396,6 +406,7 @@
 .theme-ocean {
   /* Primary colors */
   --theme-primary: #0088cc;
+  --theme-primary-rgb: 0, 136, 204;
   --theme-primary-hover: #006699;
   --theme-primary-light: #33aadd;
   --theme-primary-dark: #005588;
@@ -437,6 +448,7 @@
 .theme-midnight-purple {
   /* Primary colors */
   --theme-primary: #a78bfa;
+  --theme-primary-rgb: 167, 139, 250;
   --theme-primary-hover: #c4b5fd;
   --theme-primary-light: #2e1065;
   --theme-primary-dark: #6d28d9;
@@ -478,6 +490,7 @@
 .theme-sunset-orange {
   /* Primary colors */
   --theme-primary: #ea580c;
+  --theme-primary-rgb: 234, 88, 12;
   --theme-primary-hover: #c2410c;
   --theme-primary-light: #fed7aa;
   --theme-primary-dark: #9a3412;
@@ -519,6 +532,7 @@
 .theme-mint-fresh {
   /* Primary colors */
   --theme-primary: #0d9488;
+  --theme-primary-rgb: 13, 148, 136;
   --theme-primary-hover: #0f766e;
   --theme-primary-light: #ccfbf1;
   --theme-primary-dark: #134e4a;

@@ -12,9 +12,9 @@
       &#9654;
     </span>
 
-    <!-- Agent name -->
+    <!-- Agent name (alias or ID) -->
     <span class="font-label text-[11px] font-semibold uppercase tracking-wider truncate" :style="{ color: appColor }">
-      {{ agentId }}
+      {{ getDisplayName(agentId) }}
     </span>
 
     <!-- Active/idle indicator -->
@@ -38,7 +38,7 @@
     </span>
 
     <!-- Last event time -->
-    <span class="font-mono-data text-[9px] text-[var(--theme-text-quaternary)]">
+    <span class="font-mono-data text-[9px] text-[var(--theme-text-quaternary)] tabular-nums">
       {{ lastEventAgo }}
     </span>
   </button>
@@ -46,6 +46,9 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
+import { useAgentAliases } from '../composables/useAgentAliases';
+
+const { getDisplayName } = useAgentAliases();
 
 const props = defineProps<{
   agentId: string;

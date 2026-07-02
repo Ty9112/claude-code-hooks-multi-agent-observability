@@ -1,14 +1,41 @@
-import { computed } from 'vue';
+import { ref, watch, onUnmounted } from 'vue';
 import type { HookEvent, SessionInfo } from '../types';
 
 const IDLE_THRESHOLD_MS = 30_000; // 30 seconds without events = idle
 
 export function useSessionTracker(events: () => HookEvent[]) {
-  const sessions = computed<SessionInfo[]>(() => {
-    const now = Date.now();
-    const sessionMap = new Map<string, SessionInfo>();
+  // Persistent state — survives across recomputations
+  const sessionMap = new Map<string, SessionInfo>();
+  let lastProcessedCount = 0;
 
-    for (const event of events()) {
+  const sessions = ref<SessionInfo[]>([]);
+  let debounceTimer: number | null = null;
+  const SESSION_DEBOUNCE = 100; // ms
+
+  function flushSessions() {
+    const now = Date.now();
+    for (const session of sessionMap.values()) {
+      session.status = (now - session.lastEventTime) < IDLE_THRESHOLD_MS ? 'active' : 'idle';
+    }
+    sessions.value = Array.from(sessionMap.values()).sort((a, b) => {
+      if (a.status !== b.status) return a.status === 'active' ? -1 : 1;
+      return b.lastEventTime - a.lastEventTime;
+    });
+    debounceTimer = null;
+  }
+
+  watch(() => events().length, () => {
+    const evts = events();
+
+    // Detect reset (events array shrank — user cleared events)
+    if (evts.length < lastProcessedCount) {
+      sessionMap.clear();
+      lastProcessedCount = 0;
+    }
+
+    // Only process NEW events (incremental)
+    for (let i = lastProcessedCount; i < evts.length; i++) {
+      const event = evts[i];
       if (!event.timestamp) continue;
 
       const sessionIdShort = event.session_id.slice(0, 8);
@@ -43,12 +70,10 @@ export function useSessionTracker(events: () => HookEvent[]) {
         session.lastEventTime = event.timestamp;
       }
 
-      // Track model name from latest event
       if (event.model_name) {
         session.modelName = event.model_name;
       }
 
-      // Track tool usage
       if (event.payload?.tool_name) {
         if (event.hook_event_type === 'PreToolUse') {
           session.toolCount++;
@@ -57,16 +82,18 @@ export function useSessionTracker(events: () => HookEvent[]) {
       }
     }
 
-    // Determine active/idle status
-    for (const session of sessionMap.values()) {
-      session.status = (now - session.lastEventTime) < IDLE_THRESHOLD_MS ? 'active' : 'idle';
-    }
+    lastProcessedCount = evts.length;
 
-    // Sort: active first, then by last event time descending
-    return Array.from(sessionMap.values()).sort((a, b) => {
-      if (a.status !== b.status) return a.status === 'active' ? -1 : 1;
-      return b.lastEventTime - a.lastEventTime;
-    });
+    // Debounce the output ref update (sort + status check)
+    if (debounceTimer !== null) clearTimeout(debounceTimer);
+    debounceTimer = window.setTimeout(flushSessions, SESSION_DEBOUNCE);
+  }, { immediate: true });
+
+  onUnmounted(() => {
+    if (debounceTimer !== null) {
+      clearTimeout(debounceTimer);
+      debounceTimer = null;
+    }
   });
 
   return { sessions };
