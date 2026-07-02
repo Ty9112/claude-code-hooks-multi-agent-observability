@@ -109,6 +109,17 @@
       />
     </DockablePanel>
 
+    <!-- Agent Teams Panel (conditional on team activity) -->
+    <DockablePanel v-if="hasTeamActivity" panel-id="agent-teams" title="Agent Teams" :default-width="800" :default-height="450">
+      <AgentTeamsPanel
+        :tasks="tasks"
+        :team-agents="teamAgents"
+        :messages="messages"
+        :team-name="teamName"
+        @select-agent="toggleAgentLane"
+      />
+    </DockablePanel>
+
     <!-- Agent Swim Lane Container (below pulse chart, full width, hidden when empty) -->
     <DockablePanel panel-id="swim-lanes" title="Swim Lanes" :default-width="900" :default-height="450">
       <div v-if="selectedAgentLanes.length > 0" class="w-full bg-[var(--theme-bg-secondary)] px-3 py-4 mobile:px-2 mobile:py-2 overflow-hidden">
@@ -193,6 +204,7 @@ import { useSessionTracker } from './composables/useSessionTracker';
 import { useToolAnalytics } from './composables/useToolAnalytics';
 import { useKpiData } from './composables/useKpiData';
 import { usePanelManager } from './composables/usePanelManager';
+import { useTeamOrchestration } from './composables/useTeamOrchestration';
 import { exportEventsCSV, exportSessionsCSV, exportAnalyticsCSV, exportJSON, exportPDF, exportMarkdownReport } from './composables/useExport';
 import EventTimeline from './components/EventTimeline.vue';
 import FilterPanel from './components/FilterPanel.vue';
@@ -207,6 +219,7 @@ import KpiRow from './components/KpiRow.vue';
 import ClaudeHudCard from './components/ClaudeHudCard.vue';
 import DockablePanel from './components/DockablePanel.vue';
 import ExportMenu from './components/ExportMenu.vue';
+import AgentTeamsPanel from './components/AgentTeamsPanel.vue';
 import { WS_URL } from './config';
 
 // WebSocket connection
@@ -230,6 +243,9 @@ const { metrics: kpiMetrics } = useKpiData(
   () => analytics.value,
   () => sessions.value
 );
+
+// Team orchestration
+const { tasks, teamAgents, messages, teamName, hasTeamActivity } = useTeamOrchestration(() => events.value);
 
 // Panel management
 const panelManager = usePanelManager();

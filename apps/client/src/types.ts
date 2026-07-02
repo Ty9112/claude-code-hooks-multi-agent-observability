@@ -120,6 +120,37 @@ export interface ToolAnalyticsData {
   eventsPerMinute: { timestamp: number; rate: number }[];
 }
 
+// Agent Teams orchestration
+export interface OrchestratedTask {
+  id: string;
+  subject: string;
+  status: 'pending' | 'in_progress' | 'completed';
+  owner: string | null;
+  blockedBy: string[];
+  activeForm: string | null;
+  createdAt: number;
+  updatedAt: number;
+}
+
+export interface TeamAgent {
+  agentId: string;
+  agentType: string;
+  sourceApp: string;
+  sessionId: string;
+  status: 'running' | 'stopped';
+  spawnedAt: number;
+  stoppedAt: number | null;
+  description: string | null;
+  model: string | null;
+}
+
+export interface AgentMessage {
+  from: string;
+  to: string;
+  summary: string;
+  timestamp: number;
+}
+
 // Claude HUD data
 export interface HudData {
   planName: string | null;

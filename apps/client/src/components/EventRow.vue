@@ -175,6 +175,9 @@
           <span v-if="toolName" class="inline-flex items-center px-1.5 py-0.5 rounded-full text-xs font-semibold border-2 border-[var(--theme-primary)] text-[var(--theme-primary)] bg-[var(--theme-primary-light)] shadow-sm">
             <span class="mr-0.5">{{ toolEmoji }}</span>{{ toolName }}
           </span>
+          <span v-if="teamBadge" class="inline-flex items-center px-1.5 py-0.5 rounded-full text-[10px] font-bold border" :class="teamBadge.colorClass">
+            {{ teamBadge.label }}
+          </span>
         </div>
       </div>
 
@@ -199,6 +202,9 @@
           </span>
           <span v-if="toolName" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-semibold border-2 border-[var(--theme-primary)] text-[var(--theme-primary)] bg-[var(--theme-primary-light)] shadow-sm">
             <span class="mr-1">{{ toolEmoji }}</span>{{ toolName }}
+          </span>
+          <span v-if="teamBadge" class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-bold border" :class="teamBadge.colorClass">
+            {{ teamBadge.label }}
           </span>
         </div>
         <span class="text-sm text-[var(--theme-text-tertiary)] font-semibold">
@@ -539,6 +545,54 @@ const hitlTypeLabel = computed(() => {
 
 const permissionType = computed(() => {
   return props.event.payload?.permission_type || null;
+});
+
+// Team orchestration badge info
+const teamBadge = computed<{ label: string; colorClass: string } | null>(() => {
+  const ev = props.event;
+  const toolName = ev.payload?.tool_name;
+  const input = ev.payload?.tool_input;
+
+  // SubagentStart
+  if (ev.hook_event_type === 'SubagentStart') {
+    const agentType = ev.payload?.agent_type || 'agent';
+    return { label: agentType.toUpperCase(), colorClass: 'bg-cyan-500/20 text-cyan-400 border-cyan-500/40' };
+  }
+
+  // SubagentStop
+  if (ev.hook_event_type === 'SubagentStop') {
+    const agentType = ev.payload?.agent_type || 'agent';
+    return { label: `${agentType.toUpperCase()} DONE`, colorClass: 'bg-gray-500/20 text-gray-400 border-gray-500/40' };
+  }
+
+  if (ev.hook_event_type !== 'PreToolUse') return null;
+
+  // TaskCreate
+  if (toolName === 'TaskCreate') {
+    return { label: 'PENDING', colorClass: 'bg-gray-500/20 text-gray-300 border-gray-500/40' };
+  }
+
+  // TaskUpdate
+  if (toolName === 'TaskUpdate' && input?.status) {
+    const statusMap: Record<string, { label: string; colorClass: string }> = {
+      'pending': { label: 'PENDING', colorClass: 'bg-gray-500/20 text-gray-300 border-gray-500/40' },
+      'in_progress': { label: 'IN PROGRESS', colorClass: 'bg-blue-500/20 text-blue-400 border-blue-500/40' },
+      'completed': { label: 'COMPLETED', colorClass: 'bg-green-500/20 text-green-400 border-green-500/40' },
+    };
+    return statusMap[input.status] || null;
+  }
+
+  // SendMessage
+  if (toolName === 'SendMessage' && input?.recipient) {
+    return { label: `\u2192 ${input.recipient}`, colorClass: 'bg-yellow-500/20 text-yellow-400 border-yellow-500/40' };
+  }
+
+  // TeamCreate
+  if (toolName === 'TeamCreate' && input?.team_name) {
+    return { label: input.team_name, colorClass: 'bg-purple-500/20 text-purple-400 border-purple-500/40' };
+  }
+
+  return null;
 });
 
 // Methods for HITL responses
