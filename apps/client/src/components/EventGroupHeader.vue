@@ -1,6 +1,6 @@
 <template>
   <button
-    class="w-full flex items-center gap-2 px-3 py-2 mobile:px-2 mobile:py-1.5 rounded transition-all duration-150"
+    class="w-full flex items-center gap-2 px-3 py-2 mobile:px-2 mobile:py-1.5 transition-all duration-150"
     :class="expanded
       ? 'bg-[var(--theme-bg-tertiary)] border border-[var(--theme-border-primary)]'
       : 'bg-[var(--theme-bg-secondary)] border border-transparent hover:bg-[var(--theme-bg-tertiary)]'"
@@ -33,7 +33,7 @@
     <span class="flex-1"></span>
 
     <!-- Event count badge -->
-    <span class="font-mono-data text-[9px] px-1.5 py-0.5 rounded border bg-[var(--theme-bg-secondary)] text-[var(--theme-text-quaternary)] border-[var(--theme-border-primary)]">
+    <span class="font-mono-data text-[9px] px-1.5 py-0.5 border bg-[var(--theme-bg-secondary)] text-[var(--theme-text-quaternary)] border-[var(--theme-border-primary)]">
       {{ eventCount }}
     </span>
 

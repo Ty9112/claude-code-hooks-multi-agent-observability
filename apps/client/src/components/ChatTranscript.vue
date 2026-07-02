@@ -1,12 +1,12 @@
 <template>
-  <div class="bg-white dark:bg-gray-800 rounded-lg p-4 h-full overflow-y-auto space-y-3 border-2 border-gray-300 dark:border-gray-600">
+  <div class="bg-white dark:bg-gray-800 p-4 h-full overflow-y-auto space-y-3 border-2 border-gray-300 dark:border-gray-600">
     <div v-for="(item, index) in chatItems" :key="index">
       <!-- User Message -->
       <div v-if="item.type === 'user' && item.message" 
-           class="p-3 rounded-lg bg-blue-50 dark:bg-blue-900/30">
+           class="p-3 bg-blue-50 dark:bg-blue-900/30">
         <div class="flex items-start justify-between">
           <div class="flex items-start space-x-3 flex-1">
-            <span class="text-lg font-semibold px-3 py-1 rounded-full flex-shrink-0 bg-blue-500 text-white">
+            <span class="text-lg font-semibold px-3 py-1 flex-shrink-0 bg-blue-500 text-white">
               User
             </span>
             <div class="flex-1">
@@ -25,7 +25,7 @@
                   </p>
                   <!-- Tool result -->
                   <div v-else-if="content.type === 'tool_result'" 
-                       class="bg-gray-100 dark:bg-gray-900 p-2 rounded">
+                       class="bg-gray-100 dark:bg-gray-900 p-2">
                     <span class="text-sm font-mono text-gray-600 dark:text-gray-400">Tool Result:</span>
                     <pre class="text-sm text-gray-700 dark:text-gray-300 mt-1">{{ content.content }}</pre>
                   </div>
@@ -42,14 +42,14 @@
             <!-- Show Details Button -->
             <button
               @click="toggleDetails(index)"
-              class="px-2 py-1 text-xs font-medium text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded transition-colors"
+              class="px-2 py-1 text-xs font-medium text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
             >
               {{ isDetailsExpanded(index) ? 'Hide' : 'Show' }} Details
             </button>
             <!-- Copy Button -->
             <button
               @click="copyMessage(index, item.type || item.role)"
-              class="px-2 py-1 text-xs font-medium text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded transition-colors flex items-center"
+              class="px-2 py-1 text-xs font-medium text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors flex items-center"
               :title="'Copy message'"
             >
               {{ getCopyButtonText(index) }}
@@ -57,17 +57,17 @@
           </div>
         </div>
         <!-- Details Section -->
-        <div v-if="isDetailsExpanded(index)" class="mt-3 p-3 bg-gray-100 dark:bg-gray-900 rounded-lg">
+        <div v-if="isDetailsExpanded(index)" class="mt-3 p-3 bg-gray-100 dark:bg-gray-900">
           <pre class="text-xs text-gray-700 dark:text-gray-300 overflow-x-auto">{{ JSON.stringify(item, null, 2) }}</pre>
         </div>
       </div>
 
       <!-- Assistant Message -->
       <div v-else-if="item.type === 'assistant' && item.message" 
-           class="p-3 rounded-lg bg-gray-50 dark:bg-gray-900/30">
+           class="p-3 bg-gray-50 dark:bg-gray-900/30">
         <div class="flex items-start justify-between">
           <div class="flex items-start space-x-3 flex-1">
-            <span class="text-lg font-semibold px-3 py-1 rounded-full flex-shrink-0 bg-gray-500 text-white">
+            <span class="text-lg font-semibold px-3 py-1 flex-shrink-0 bg-gray-500 text-white">
               Assistant
             </span>
             <div class="flex-1">
@@ -81,7 +81,7 @@
                   </p>
                   <!-- Tool use -->
                   <div v-else-if="content.type === 'tool_use'" 
-                       class="bg-yellow-50 dark:bg-yellow-900/20 p-3 rounded border border-yellow-200 dark:border-yellow-800">
+                       class="bg-yellow-50 dark:bg-yellow-900/20 p-3 border border-yellow-200 dark:border-yellow-800">
                     <div class="flex items-center space-x-2 mb-2">
                       <span class="text-2xl">🔧</span>
                       <span class="font-semibold text-yellow-800 dark:text-yellow-200">{{ content.name }}</span>
@@ -105,14 +105,14 @@
             <!-- Show Details Button -->
             <button
               @click="toggleDetails(index)"
-              class="px-2 py-1 text-xs font-medium text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded transition-colors"
+              class="px-2 py-1 text-xs font-medium text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
             >
               {{ isDetailsExpanded(index) ? 'Hide' : 'Show' }} Details
             </button>
             <!-- Copy Button -->
             <button
               @click="copyMessage(index, item.type || item.role)"
-              class="px-2 py-1 text-xs font-medium text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded transition-colors flex items-center"
+              class="px-2 py-1 text-xs font-medium text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors flex items-center"
               :title="'Copy message'"
             >
               {{ getCopyButtonText(index) }}
@@ -120,17 +120,17 @@
           </div>
         </div>
         <!-- Details Section -->
-        <div v-if="isDetailsExpanded(index)" class="mt-3 p-3 bg-gray-100 dark:bg-gray-900 rounded-lg">
+        <div v-if="isDetailsExpanded(index)" class="mt-3 p-3 bg-gray-100 dark:bg-gray-900">
           <pre class="text-xs text-gray-700 dark:text-gray-300 overflow-x-auto">{{ JSON.stringify(item, null, 2) }}</pre>
         </div>
       </div>
 
       <!-- System Message -->
       <div v-else-if="item.type === 'system'" 
-           class="p-3 rounded-lg bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800">
+           class="p-3 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800">
         <div class="flex items-start justify-between">
           <div class="flex items-start space-x-3 flex-1">
-            <span class="text-lg font-semibold px-3 py-1 rounded-full flex-shrink-0 bg-amber-600 text-white">
+            <span class="text-lg font-semibold px-3 py-1 flex-shrink-0 bg-amber-600 text-white">
               System
             </span>
             <div class="flex-1">
@@ -152,14 +152,14 @@
             <!-- Show Details Button -->
             <button
               @click="toggleDetails(index)"
-              class="px-2 py-1 text-xs font-medium text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded transition-colors"
+              class="px-2 py-1 text-xs font-medium text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
             >
               {{ isDetailsExpanded(index) ? 'Hide' : 'Show' }} Details
             </button>
             <!-- Copy Button -->
             <button
               @click="copyMessage(index, item.type || item.role)"
-              class="px-2 py-1 text-xs font-medium text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded transition-colors flex items-center"
+              class="px-2 py-1 text-xs font-medium text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors flex items-center"
               :title="'Copy message'"
             >
               {{ getCopyButtonText(index) }}
@@ -167,18 +167,18 @@
           </div>
         </div>
         <!-- Details Section -->
-        <div v-if="isDetailsExpanded(index)" class="mt-3 p-3 bg-gray-100 dark:bg-gray-900 rounded-lg">
+        <div v-if="isDetailsExpanded(index)" class="mt-3 p-3 bg-gray-100 dark:bg-gray-900">
           <pre class="text-xs text-gray-700 dark:text-gray-300 overflow-x-auto">{{ JSON.stringify(item, null, 2) }}</pre>
         </div>
       </div>
 
       <!-- Fallback for simple chat format -->
       <div v-else-if="item.role" 
-           class="p-3 rounded-lg"
+           class="p-3"
            :class="item.role === 'user' ? 'bg-blue-50 dark:bg-blue-900/30' : 'bg-gray-50 dark:bg-gray-900/30'">
         <div class="flex items-start justify-between">
           <div class="flex items-start space-x-3 flex-1">
-            <span class="text-lg font-semibold px-3 py-1 rounded-full flex-shrink-0"
+            <span class="text-lg font-semibold px-3 py-1 flex-shrink-0"
                   :class="item.role === 'user' ? 'bg-blue-500 text-white' : 'bg-gray-500 text-white'">
               {{ item.role === 'user' ? 'User' : 'Assistant' }}
             </span>
@@ -193,14 +193,14 @@
             <!-- Show Details Button -->
             <button
               @click="toggleDetails(index)"
-              class="px-2 py-1 text-xs font-medium text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded transition-colors"
+              class="px-2 py-1 text-xs font-medium text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
             >
               {{ isDetailsExpanded(index) ? 'Hide' : 'Show' }} Details
             </button>
             <!-- Copy Button -->
             <button
               @click="copyMessage(index, item.type || item.role)"
-              class="px-2 py-1 text-xs font-medium text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded transition-colors flex items-center"
+              class="px-2 py-1 text-xs font-medium text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors flex items-center"
               :title="'Copy message'"
             >
               {{ getCopyButtonText(index) }}
@@ -208,7 +208,7 @@
           </div>
         </div>
         <!-- Details Section -->
-        <div v-if="isDetailsExpanded(index)" class="mt-3 p-3 bg-gray-100 dark:bg-gray-900 rounded-lg">
+        <div v-if="isDetailsExpanded(index)" class="mt-3 p-3 bg-gray-100 dark:bg-gray-900">
           <pre class="text-xs text-gray-700 dark:text-gray-300 overflow-x-auto">{{ JSON.stringify(item, null, 2) }}</pre>
         </div>
       </div>

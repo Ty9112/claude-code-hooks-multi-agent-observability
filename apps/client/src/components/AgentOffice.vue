@@ -5,7 +5,7 @@
       <div
         v-for="(agent, idx) in orderedAgents"
         :key="agent.agentId"
-        class="flex items-center gap-1 px-2 py-1 rounded text-[10px] font-semibold uppercase tracking-wider border cursor-grab select-none transition-all duration-100"
+        class="flex items-center gap-1 px-2 py-1 text-[10px] font-semibold uppercase tracking-wider border cursor-grab select-none transition-all duration-100"
         :class="dragOverIndex === idx ? 'scale-105 opacity-70' : ''"
         :style="{
           borderColor: agent.color + '66',
@@ -21,7 +21,7 @@
       >
         <span class="w-1.5 h-1.5 rounded-full shrink-0" :style="{ backgroundColor: agent.status === 'active' ? agent.color : '#3d5568' }"></span>
         <span class="truncate max-w-[120px]">{{ agent.name }}</span>
-        <span v-if="getTaskCount(agent.agentId) > 0" class="ml-0.5 px-1 py-0 rounded-full text-[8px] bg-[var(--theme-primary)] text-[var(--theme-bg-primary)]">
+        <span v-if="getTaskCount(agent.agentId) > 0" class="ml-0.5 px-1 py-0 text-[8px] bg-[var(--theme-primary)] text-[var(--theme-bg-primary)]">
           {{ getTaskCount(agent.agentId) }}
         </span>
       </div>

@@ -10,6 +10,17 @@ export interface TooltipState {
   accentColor: string;
 }
 
+// Tooltip content is rendered via v-html — anything sourced from event/tool data
+// (region.label, region.data.html) must be escaped before interpolation.
+export function escapeHtml(value: string | number): string {
+  return String(value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 export function useCanvasTooltip() {
   const tooltip = ref<TooltipState>({
     visible: false,
@@ -34,14 +45,20 @@ export function useCanvasTooltip() {
       (region, x, y) => {
         if (region) {
           hoveredId.value = region.id;
-          const pctText = region.data?.percentage != null
-            ? ` (${Math.round(region.data.percentage)}%)`
-            : '';
+          // Allow a region to supply pre-built tooltip HTML (e.g. an event-type
+          // breakdown) instead of the default "label: value" template.
+          let html = region.data?.html;
+          if (!html) {
+            const pctText = region.data?.percentage != null
+              ? ` (${Math.round(region.data.percentage)}%)`
+              : '';
+            html = `<strong>${escapeHtml(region.label)}</strong>: ${region.value}${pctText}`;
+          }
           tooltip.value = {
             visible: true,
             x,
             y,
-            html: `<strong>${region.label}</strong>: ${region.value}${pctText}`,
+            html,
             accentColor: region.color,
           };
         } else {

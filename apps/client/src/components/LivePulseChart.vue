@@ -14,7 +14,7 @@
         <div class="flex items-center gap-1.5 flex-wrap">
           <!-- Agents -->
           <div
-            class="flex items-center gap-1 px-2 py-0.5 rounded border border-[var(--theme-primary)]/25 bg-[var(--theme-primary)]/8"
+            class="flex items-center gap-1 px-2 py-0.5 border border-[var(--theme-primary)]/25 bg-[var(--theme-primary)]/8"
             :title="`${uniqueAgentCount} active agent${uniqueAgentCount !== 1 ? 's' : ''}`"
           >
             <svg class="w-3.5 h-3.5 text-[var(--theme-primary)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -25,7 +25,7 @@
           </div>
           <!-- Events -->
           <div
-            class="flex items-center gap-1 px-2 py-0.5 rounded border border-[var(--theme-border-primary)] bg-[var(--theme-bg-tertiary)]"
+            class="flex items-center gap-1 px-2 py-0.5 border border-[var(--theme-border-primary)] bg-[var(--theme-bg-tertiary)]"
             :title="`Total events in window`"
           >
             <svg class="w-3.5 h-3.5 text-[var(--theme-accent-warning)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -36,7 +36,7 @@
           </div>
           <!-- Tools -->
           <div
-            class="flex items-center gap-1 px-2 py-0.5 rounded border border-[var(--theme-border-primary)] bg-[var(--theme-bg-tertiary)]"
+            class="flex items-center gap-1 px-2 py-0.5 border border-[var(--theme-border-primary)] bg-[var(--theme-bg-tertiary)]"
             :title="`Total tool calls in window`"
           >
             <svg class="w-3.5 h-3.5 text-[var(--theme-text-secondary)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -47,7 +47,7 @@
           </div>
           <!-- Avg gap -->
           <div
-            class="flex items-center gap-1 px-2 py-0.5 rounded border border-[var(--theme-border-primary)] bg-[var(--theme-bg-tertiary)]"
+            class="flex items-center gap-1 px-2 py-0.5 border border-[var(--theme-border-primary)] bg-[var(--theme-bg-tertiary)]"
             :title="`Average time between events`"
           >
             <svg class="w-3.5 h-3.5 text-[var(--theme-text-secondary)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -67,7 +67,7 @@
           @click="setTimeRange(range)"
           @keydown="handleTimeRangeKeyDown($event, index)"
           :class="[
-            'px-2.5 py-1 mobile:px-1.5 mobile:py-0.5 text-[11px] mobile:text-[10px] font-semibold rounded transition-all duration-150 border',
+            'px-2.5 py-1 mobile:px-1.5 mobile:py-0.5 text-[11px] mobile:text-[10px] font-semibold transition-all duration-150 border',
             timeRange === range
               ? 'bg-[var(--theme-primary)] text-white border-[var(--theme-primary)]'
               : 'bg-[var(--theme-bg-tertiary)] text-[var(--theme-text-secondary)] border-[var(--theme-border-primary)] hover:border-[var(--theme-primary)] hover:text-[var(--theme-primary)]'
@@ -86,18 +86,20 @@
         ref="canvas"
         class="w-full cursor-crosshair"
         :style="{ height: chartHeight + 'px' }"
-        @mousemove="handleMouseMove"
-        @mouseleave="handleMouseLeave"
         role="img"
         :aria-label="chartAriaLabel"
       ></canvas>
       <div
         v-if="tooltip.visible"
-        class="absolute bg-[var(--theme-bg-primary)] text-[var(--theme-text-primary)] px-2.5 py-1.5 rounded text-[11px] pointer-events-none z-10 shadow-lg border border-[var(--theme-border-secondary)] font-mono-data"
-        :style="{ left: tooltip.x + 'px', top: tooltip.y + 'px' }"
-      >
-        {{ tooltip.text }}
-      </div>
+        class="fixed z-50 pointer-events-none px-2.5 py-1.5 text-[11px] font-mono-data shadow-lg border border-[var(--theme-border-secondary)]"
+        :style="{
+          left: tooltip.x + 12 + 'px',
+          top: tooltip.y - 8 + 'px',
+          background: 'var(--theme-bg-primary)',
+          borderLeft: '3px solid ' + tooltip.accentColor,
+        }"
+        v-html="tooltip.html"
+      ></div>
       <div
         v-if="!hasData"
         class="absolute inset-0 flex items-center justify-center"
@@ -120,6 +122,8 @@ import { useChartData } from '../composables/useChartData';
 import { createChartRenderer, type ChartDimensions } from '../utils/chartRenderer';
 import { useEventEmojis } from '../composables/useEventEmojis';
 import { useEventColors } from '../composables/useEventColors';
+import { useCanvasTooltip, escapeHtml } from '../composables/useCanvasTooltip';
+import type { CanvasInteractionManager, HitRegion } from '../utils/canvasInteraction';
 
 const props = defineProps<{
   events: HookEvent[];
@@ -185,6 +189,7 @@ watch(timeRange, (range) => {
 let renderer: ReturnType<typeof createChartRenderer> | null = null;
 let resizeObserver: ResizeObserver | null = null;
 let animationFrame: number | null = null;
+let interactionManager: CanvasInteractionManager | null = null;
 const processedEventIds = new Set<string>();
 
 const { formatEventTypeLabel } = useEventEmojis();
@@ -201,12 +206,7 @@ const chartAriaLabel = computed(() => {
   return `Activity chart showing ${totalEventCount.value} events over the last ${rangeText}`;
 });
 
-const tooltip = ref({
-  visible: false,
-  x: 0,
-  y: 0,
-  text: ''
-});
+const { tooltip, bindCanvas, setRegions } = useCanvasTooltip();
 
 const getThemeColor = (property: string): string => {
   const style = getComputedStyle(document.documentElement);
@@ -243,17 +243,48 @@ const getDimensions = (): ChartDimensions => {
   };
 };
 
+// Build hover regions matching each bar's column so useCanvasTooltip can hit-test them
+const buildHoverRegions = (data: ReturnType<typeof getChartData>): HitRegion[] => {
+  const dimensions = getDimensions();
+  const chartArea = {
+    x: dimensions.padding.left,
+    y: dimensions.padding.top,
+    width: dimensions.width - dimensions.padding.left - dimensions.padding.right,
+    height: dimensions.height - dimensions.padding.top - dimensions.padding.bottom
+  };
+  const barWidth = chartArea.width / data.length;
+
+  return data
+    .map((point, i) => {
+      const eventTypesText = Object.entries(point.eventTypes || {})
+        .map(([type, count]) => `${escapeHtml(type)}: ${count}`)
+        .join(', ');
+      return {
+        id: `bucket-${i}`,
+        bounds: { x: chartArea.x + i * barWidth, y: chartArea.y, w: barWidth, h: chartArea.height },
+        label: 'Events',
+        value: point.count,
+        color: getThemeColor('primary'),
+        data: { html: `${point.count} events${eventTypesText ? ` (${eventTypesText})` : ''}` }
+      };
+    })
+    .filter(region => region.value > 0);
+};
+
 const render = () => {
   if (!renderer || !canvas.value) return;
+  if (!interactionManager) interactionManager = bindCanvas(canvas.value);
 
   const data = getChartData();
   const maxValue = Math.max(...data.map(d => d.count), 1);
-  
+
   renderer.clear();
   renderer.drawBackground();
   renderer.drawAxes();
   renderer.drawTimeLabels(timeRange.value);
   renderer.drawBars(data, maxValue, 1, formatEventTypeLabel, getHexColorForSession);
+
+  setRegions(interactionManager, buildHoverRegions(data));
 };
 
 const animateNewEvent = (x: number, y: number) => {
@@ -375,49 +406,6 @@ watch(timeRange, () => {
 watch(chartHeight, () => {
   handleResize();
 });
-
-const handleMouseMove = (event: MouseEvent) => {
-  if (!canvas.value || !chartContainer.value) return;
-  
-  const rect = canvas.value.getBoundingClientRect();
-  const x = event.clientX - rect.left;
-  const y = event.clientY - rect.top;
-  
-  const data = getChartData();
-  const dimensions = getDimensions();
-  const chartArea = {
-    x: dimensions.padding.left,
-    y: dimensions.padding.top,
-    width: dimensions.width - dimensions.padding.left - dimensions.padding.right,
-    height: dimensions.height - dimensions.padding.top - dimensions.padding.bottom
-  };
-  
-  const barWidth = chartArea.width / data.length;
-  const barIndex = Math.floor((x - chartArea.x) / barWidth);
-  
-  if (barIndex >= 0 && barIndex < data.length && y >= chartArea.y && y <= chartArea.y + chartArea.height) {
-    const point = data[barIndex];
-    if (point.count > 0) {
-      const eventTypesText = Object.entries(point.eventTypes || {})
-        .map(([type, count]) => `${type}: ${count}`)
-        .join(', ');
-      
-      tooltip.value = {
-        visible: true,
-        x: event.clientX - rect.left,
-        y: event.clientY - rect.top - 30,
-        text: `${point.count} events${eventTypesText ? ` (${eventTypesText})` : ''}`
-      };
-      return;
-    }
-  }
-  
-  tooltip.value.visible = false;
-};
-
-const handleMouseLeave = () => {
-  tooltip.value.visible = false;
-};
 
 const handleTimeRangeKeyDown = (event: KeyboardEvent, currentIndex: number) => {
   let newIndex = currentIndex;

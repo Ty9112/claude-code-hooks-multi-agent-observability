@@ -30,7 +30,7 @@
           <button
             v-if="panel.dockedWidth !== null"
             @click="panelManager.resetDockedWidth(panelId)"
-            class="w-5 h-5 flex items-center justify-center rounded text-[var(--theme-text-quaternary)] hover:bg-[var(--theme-bg-tertiary)] hover:text-[var(--theme-accent-warning)] transition-colors"
+            class="w-5 h-5 flex items-center justify-center text-[var(--theme-text-quaternary)] hover:bg-[var(--theme-bg-tertiary)] hover:text-[var(--theme-accent-warning)] transition-colors"
             title="Reset to full width"
           >
             <svg class="w-3 h-3" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
@@ -40,7 +40,7 @@
           <!-- Collapse/Expand -->
           <button
             @click="panelManager.toggleCollapse(panelId)"
-            class="w-5 h-5 flex items-center justify-center rounded text-[var(--theme-text-quaternary)] hover:bg-[var(--theme-bg-tertiary)] hover:text-[var(--theme-text-secondary)] transition-colors"
+            class="w-5 h-5 flex items-center justify-center text-[var(--theme-text-quaternary)] hover:bg-[var(--theme-bg-tertiary)] hover:text-[var(--theme-text-secondary)] transition-colors"
             :title="panel.collapsed ? 'Expand' : 'Collapse'"
           >
             <svg class="w-3 h-3 transition-transform" :class="panel.collapsed ? '-rotate-90' : ''" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
@@ -50,7 +50,7 @@
           <!-- Undock -->
           <button
             @click="panelManager.undockPanel(panelId)"
-            class="w-5 h-5 flex items-center justify-center rounded text-[var(--theme-text-quaternary)] hover:bg-[var(--theme-bg-tertiary)] hover:text-[var(--theme-primary)] transition-colors"
+            class="w-5 h-5 flex items-center justify-center text-[var(--theme-text-quaternary)] hover:bg-[var(--theme-bg-tertiary)] hover:text-[var(--theme-primary)] transition-colors"
             title="Undock (float)"
           >
             <svg class="w-3 h-3" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
@@ -112,12 +112,12 @@
         @mousedown="panelManager.bringToFront(panelId)"
       >
         <div
-          class="h-full flex flex-col rounded-lg overflow-hidden border border-[var(--theme-border-secondary)] shadow-2xl"
+          class="h-full flex flex-col overflow-hidden border border-[var(--theme-border-secondary)] shadow-2xl"
           style="box-shadow: 0 8px 40px rgba(0,0,0,0.6), 0 0 1px rgba(0,200,255,0.15);"
         >
           <!-- Title bar — draggable -->
           <div
-            class="flex items-center justify-between px-3 py-2 bg-[#0F1934] border-b border-[var(--theme-border-primary)] cursor-move select-none shrink-0"
+            class="flex items-center justify-between px-3 py-2 bg-harris-navy border-b border-[var(--theme-border-primary)] cursor-move select-none shrink-0"
             @mousedown.prevent="startDrag"
           >
             <div class="flex items-center gap-2">
@@ -129,7 +129,7 @@
             <div class="flex items-center gap-1">
               <button
                 @click="panelManager.toggleMinimize(panelId)"
-                class="w-6 h-5 flex items-center justify-center rounded text-[9px] text-[var(--theme-text-quaternary)] hover:bg-[var(--theme-bg-tertiary)] hover:text-[var(--theme-text-secondary)] transition-colors"
+                class="w-6 h-5 flex items-center justify-center text-[9px] text-[var(--theme-text-quaternary)] hover:bg-[var(--theme-bg-tertiary)] hover:text-[var(--theme-text-secondary)] transition-colors"
                 :title="panel.minimized ? 'Expand' : 'Minimize'"
               >
                 <svg class="w-3 h-3" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
@@ -139,7 +139,7 @@
               </button>
               <button
                 @click="panelManager.dockPanel(panelId)"
-                class="w-6 h-5 flex items-center justify-center rounded text-[9px] text-[var(--theme-text-quaternary)] hover:bg-[var(--theme-bg-tertiary)] hover:text-[var(--theme-primary)] transition-colors"
+                class="w-6 h-5 flex items-center justify-center text-[9px] text-[var(--theme-text-quaternary)] hover:bg-[var(--theme-bg-tertiary)] hover:text-[var(--theme-primary)] transition-colors"
                 title="Dock panel"
               >
                 <svg class="w-3 h-3" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">

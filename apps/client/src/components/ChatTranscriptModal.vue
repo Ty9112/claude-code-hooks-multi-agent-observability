@@ -9,7 +9,7 @@
       
       <!-- Modal -->
       <div 
-        class="relative bg-white dark:bg-gray-800 rounded-lg mobile:rounded-none shadow-xl flex flex-col overflow-hidden z-10 mobile:w-full mobile:h-full mobile:fixed mobile:inset-0"
+        class="relative bg-white dark:bg-gray-800 shadow-xl flex flex-col overflow-hidden z-10 mobile:w-full mobile:h-full mobile:fixed mobile:inset-0"
         :style="{ width: '85vw', height: '85vh' }"
         :class="{ 'mobile:!w-full mobile:!h-full': true }"
         @click.stop
@@ -22,7 +22,7 @@
               </h2>
               <button
                 @click="close"
-                class="p-2 mobile:p-3 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center"
+                class="p-2 mobile:p-3 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center"
               >
                 <svg class="w-6 h-6 mobile:w-5 mobile:h-5 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
@@ -40,7 +40,7 @@
                     @keyup.enter="executeSearch"
                     type="text"
                     placeholder="Search transcript..."
-                    class="w-full px-4 py-2 mobile:px-3 mobile:py-2 pl-10 mobile:pl-8 text-lg mobile:text-base border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                    class="w-full px-4 py-2 mobile:px-3 mobile:py-2 pl-10 mobile:pl-8 text-lg mobile:text-base border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                   >
                   <svg class="absolute left-3 top-3 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -48,13 +48,13 @@
                 </div>
                 <button
                   @click="executeSearch"
-                  class="px-4 py-2 mobile:px-3 mobile:py-2 bg-blue-500 hover:bg-blue-600 text-white font-medium rounded-lg transition-colors text-base mobile:text-sm min-w-[44px] min-h-[44px] flex items-center justify-center"
+                  class="px-4 py-2 mobile:px-3 mobile:py-2 bg-blue-500 hover:bg-blue-600 text-white font-medium transition-colors text-base mobile:text-sm min-w-[44px] min-h-[44px] flex items-center justify-center"
                 >
                   Search
                 </button>
                 <button
                   @click="copyAllMessages"
-                  class="px-4 py-2 mobile:px-3 mobile:py-2 bg-gray-500 hover:bg-gray-600 text-white font-medium rounded-lg transition-colors text-base mobile:text-sm min-w-[44px] min-h-[44px] flex items-center justify-center"
+                  class="px-4 py-2 mobile:px-3 mobile:py-2 bg-gray-500 hover:bg-gray-600 text-white font-medium transition-colors text-base mobile:text-sm min-w-[44px] min-h-[44px] flex items-center justify-center"
                   title="Copy all messages as JSON"
                 >
                   {{ copyAllButtonText }}
@@ -62,12 +62,12 @@
               </div>
               
               <!-- Filters -->
-              <div class="flex flex-wrap gap-2 mobile:gap-1 max-h-24 mobile:max-h-32 overflow-y-auto p-2 mobile:p-1 bg-gray-50 dark:bg-gray-900/50 rounded-lg mobile:overflow-x-auto mobile:pb-2">
+              <div class="flex flex-wrap gap-2 mobile:gap-1 max-h-24 mobile:max-h-32 overflow-y-auto p-2 mobile:p-1 bg-gray-50 dark:bg-gray-900/50 mobile:overflow-x-auto mobile:pb-2">
                 <button
                   v-for="filter in filters"
                   :key="filter.type"
                   @click="toggleFilter(filter.type)"
-                  class="px-4 py-2 mobile:px-3 mobile:py-1.5 rounded-full text-sm mobile:text-xs font-medium transition-colors min-h-[44px] mobile:min-h-[36px] flex items-center whitespace-nowrap"
+                  class="px-4 py-2 mobile:px-3 mobile:py-1.5 text-sm mobile:text-xs font-medium transition-colors min-h-[44px] mobile:min-h-[36px] flex items-center whitespace-nowrap"
                   :class="activeFilters.includes(filter.type) 
                     ? 'bg-blue-500 text-white' 
                     : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'"
@@ -80,7 +80,7 @@
                 <button
                   v-if="searchQuery || activeSearchQuery || activeFilters.length > 0"
                   @click="clearSearch"
-                  class="px-4 py-2 mobile:px-3 mobile:py-1.5 rounded-full text-sm mobile:text-xs font-medium bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 hover:bg-red-200 dark:hover:bg-red-900/50 min-h-[44px] mobile:min-h-[36px] flex items-center whitespace-nowrap"
+                  class="px-4 py-2 mobile:px-3 mobile:py-1.5 text-sm mobile:text-xs font-medium bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 hover:bg-red-200 dark:hover:bg-red-900/50 min-h-[44px] mobile:min-h-[36px] flex items-center whitespace-nowrap"
                 >
                   Clear All
                 </button>

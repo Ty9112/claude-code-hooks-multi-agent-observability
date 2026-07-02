@@ -9,7 +9,7 @@
         <span class="section-title text-[13px] text-[var(--theme-primary)]">
           Sessions
         </span>
-        <span class="font-mono-data text-[10px] px-2 py-0.5 rounded border text-[var(--theme-accent-info)] bg-[var(--theme-accent-info)]/10 border-[var(--theme-accent-info)]/30">
+        <span class="font-mono-data text-[10px] px-2 py-0.5 border text-[var(--theme-accent-info)] bg-[var(--theme-accent-info)]/10 border-[var(--theme-accent-info)]/30">
           {{ activeSessions.length }} ACTIVE
         </span>
         <span class="font-mono-data text-[10px] text-[var(--theme-text-quaternary)]">

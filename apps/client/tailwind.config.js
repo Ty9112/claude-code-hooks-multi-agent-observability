@@ -12,6 +12,11 @@ export default {
         'short': {'raw': '(max-height: 400px)'}, // Custom breakpoint for height <= 400px
       },
       colors: {
+        // Static Harris brand chrome — deliberately NOT theme-reactive (header/title bars
+        // stay navy in every theme; a theme-var here renders white-on-white in Light).
+        'harris': {
+          'navy': '#0F1934',
+        },
         // Theme-aware colors using CSS custom properties
         'theme': {
           'primary': 'var(--theme-primary)',

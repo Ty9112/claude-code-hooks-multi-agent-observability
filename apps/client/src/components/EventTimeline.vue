@@ -11,7 +11,7 @@
           <!-- Auto-scroll toggle -->
           <button
             @click="emit('update:stickToBottom', !stickToBottom)"
-            class="px-2 py-1 text-[10px] font-semibold uppercase tracking-wider rounded transition-all duration-150 border"
+            class="px-2 py-1 text-[10px] font-semibold uppercase tracking-wider transition-all duration-150 border"
             :class="stickToBottom
               ? 'bg-[var(--theme-primary)] text-[var(--theme-bg-primary)] border-[var(--theme-primary)]'
               : 'text-[var(--theme-text-quaternary)] border-[var(--theme-border-primary)] hover:text-[var(--theme-text-secondary)] hover:border-[var(--theme-text-quaternary)]'"
@@ -21,10 +21,10 @@
           </button>
 
           <!-- Flat / Grouped toggle — pill buttons -->
-          <div class="flex items-center gap-0.5 bg-[var(--theme-bg-tertiary)] rounded p-0.5 border border-[var(--theme-border-primary)]">
+          <div class="flex items-center gap-0.5 bg-[var(--theme-bg-tertiary)] p-0.5 border border-[var(--theme-border-primary)]">
             <button
               @click="setViewMode('flat')"
-              class="px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider rounded transition-all duration-150"
+              class="px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider transition-all duration-150"
               :class="viewMode === 'flat'
                 ? 'bg-[var(--theme-primary)] text-[var(--theme-bg-primary)]'
                 : 'text-[var(--theme-text-quaternary)] hover:text-[var(--theme-text-secondary)]'"
@@ -33,7 +33,7 @@
             </button>
             <button
               @click="setViewMode('grouped')"
-              class="px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider rounded transition-all duration-150"
+              class="px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider transition-all duration-150"
               :class="viewMode === 'grouped'
                 ? 'bg-[var(--theme-primary)] text-[var(--theme-bg-primary)]'
                 : 'text-[var(--theme-text-quaternary)] hover:text-[var(--theme-text-secondary)]'"
@@ -51,7 +51,7 @@
           :key="agentId"
           @click="emit('selectAgent', agentId)"
           :class="[
-            'text-base mobile:text-sm font-bold px-3 mobile:px-2 py-1 rounded-full border-2 shadow-lg transition-all duration-200 hover:shadow-xl hover:scale-105 cursor-pointer',
+            'text-base mobile:text-sm font-bold px-3 mobile:px-2 py-1 border-2 shadow-lg transition-all duration-200 hover:shadow-xl hover:scale-105 cursor-pointer',
             isAgentActive(agentId)
               ? 'text-[var(--theme-text-primary)] bg-[var(--theme-bg-tertiary)]'
               : 'text-[var(--theme-text-tertiary)] bg-[var(--theme-bg-tertiary)] opacity-50 hover:opacity-75'
@@ -77,7 +77,7 @@
               @input="updateSearchPattern(($event.target as HTMLInputElement).value)"
               placeholder="Search events (regex enabled)... e.g., 'tool.*error' or '^GET'"
               :class="[
-                'w-full px-3 mobile:px-2 py-2 mobile:py-1.5 rounded-lg text-sm mobile:text-xs font-mono border-2 transition-all duration-200',
+                'w-full px-3 mobile:px-2 py-2 mobile:py-1.5 text-sm mobile:text-xs font-mono border-2 transition-all duration-200',
                 'bg-[var(--theme-bg-tertiary)] text-[var(--theme-text-primary)] placeholder-[var(--theme-text-quaternary)]',
                 'border-[var(--theme-border-primary)] focus:border-[var(--theme-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--theme-primary)]/20',
                 searchError ? 'border-[var(--theme-accent-error)]' : ''
@@ -97,7 +97,7 @@
         </div>
         <div
           v-if="searchError"
-          class="mt-1.5 mobile:mt-1 px-2 py-1.5 mobile:py-1 bg-[var(--theme-accent-error)]/10 border border-[var(--theme-accent-error)] rounded-lg text-xs mobile:text-[11px] text-[var(--theme-accent-error)] font-semibold"
+          class="mt-1.5 mobile:mt-1 px-2 py-1.5 mobile:py-1 bg-[var(--theme-accent-error)]/10 border border-[var(--theme-accent-error)] text-xs mobile:text-[11px] text-[var(--theme-accent-error)] font-semibold"
           role="alert"
         >
           <span class="inline-block mr-1">⚠️</span> {{ searchError }}

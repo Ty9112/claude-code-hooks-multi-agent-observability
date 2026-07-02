@@ -2,7 +2,7 @@
   <Transition name="toast">
     <div
       v-if="isVisible"
-      class="fixed left-1/2 transform -translate-x-1/2 z-50 flex items-center gap-3 px-4 py-3 bg-gradient-to-r from-[var(--theme-primary)] to-[var(--theme-primary-light)] text-white rounded-lg border-2 font-semibold drop-shadow-2xl transition-all duration-300"
+      class="fixed left-1/2 transform -translate-x-1/2 z-50 flex items-center gap-3 px-4 py-3 bg-gradient-to-r from-[var(--theme-primary)] to-[var(--theme-primary-light)] text-white border-2 font-semibold drop-shadow-2xl transition-all duration-300"
       :style="{
         top: `${16 + (index * 68)}px`,
         borderColor: agentColor,
@@ -14,7 +14,7 @@
         :style="{ backgroundColor: agentColor }"
       ></div>
       <span class="text-sm">
-        New Agent <span class="font-bold px-1.5 py-0.5 bg-white/20 rounded">"{{ agentName }}"</span> Joined
+        New Agent <span class="font-bold px-1.5 py-0.5 bg-white/20">"{{ agentName }}"</span> Joined
       </span>
       <button
         @click="dismiss"

@@ -1,13 +1,13 @@
 <template>
   <div class="w-full bg-[var(--theme-bg-secondary)] px-4 mobile:px-2">
-    <div class="rounded bg-[var(--theme-bg-tertiary)] border border-[var(--theme-border-primary)] p-3" style="border-top: 2px solid #a855f7;">
+    <div class="bg-[var(--theme-bg-tertiary)] border border-[var(--theme-border-primary)] p-3" style="border-top: 2px solid #a855f7;">
       <!-- Header -->
       <div class="flex items-center justify-between mb-3">
         <div class="flex items-center gap-2">
           <h3 class="section-title text-[10px] text-[var(--theme-text-quaternary)]">Claude HUD</h3>
           <span
             v-if="current?.planName"
-            class="font-mono-data text-[9px] px-1.5 py-0.5 rounded border"
+            class="font-mono-data text-[9px] px-1.5 py-0.5 border"
             :style="{
               color: '#a855f7',
               background: '#a855f711',
@@ -19,7 +19,7 @@
         </div>
         <span
           v-if="overallStatus !== 'ok'"
-          class="font-mono-data text-[9px] px-1.5 py-0.5 rounded"
+          class="font-mono-data text-[9px] px-1.5 py-0.5"
           :style="{
             color: overallStatus === 'critical' ? '#ff3f5a' : '#ffaa00',
             background: overallStatus === 'critical' ? '#ff3f5a11' : '#ffaa0011',

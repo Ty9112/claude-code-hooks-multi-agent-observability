@@ -4,7 +4,7 @@
       <div
         v-for="card in cards"
         :key="card.label"
-        class="rounded bg-[var(--theme-bg-tertiary)] border border-[var(--theme-border-primary)] px-3 py-2.5 transition-transform duration-150 hover:-translate-y-0.5"
+        class="bg-[var(--theme-bg-tertiary)] border border-[var(--theme-border-primary)] px-3 py-2.5 transition-transform duration-150 hover:-translate-y-0.5"
         :style="{ borderTop: '3px solid ' + card.color }"
       >
         <div class="section-title text-[9px] text-[var(--theme-text-quaternary)] mb-1">{{ card.label }}</div>

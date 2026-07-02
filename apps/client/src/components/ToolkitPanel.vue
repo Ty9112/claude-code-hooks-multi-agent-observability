@@ -22,7 +22,7 @@
             <div class="flex items-center gap-1.5">
               <span
                 v-if="section.badge && section.badge !== '0'"
-                class="px-1 py-0 rounded text-[9px] font-mono-data bg-[var(--theme-bg-tertiary)] text-[var(--theme-text-tertiary)]"
+                class="px-1 py-0 text-[9px] font-mono-data bg-[var(--theme-bg-tertiary)] text-[var(--theme-text-tertiary)]"
               >{{ section.badge }}</span>
               <svg
                 class="w-3 h-3 transition-transform duration-150"
@@ -87,7 +87,7 @@
                 <span class="truncate flex-1 text-left">{{ child.label }}</span>
                 <span
                   v-if="child.badge"
-                  class="px-1 py-0 rounded text-[8px] font-mono-data uppercase border shrink-0"
+                  class="px-1 py-0 text-[8px] font-mono-data uppercase border shrink-0"
                   :class="badgeClass(child.badgeColor)"
                 >{{ child.badge }}</span>
               </button>
@@ -102,7 +102,7 @@
         <button
           @click="refresh"
           :disabled="loading"
-          class="px-2 py-0.5 rounded text-[9px] font-semibold tracking-wide border transition-all duration-150 bg-[var(--theme-bg-tertiary)] border-[var(--theme-border-primary)] text-[var(--theme-text-tertiary)] hover:border-[var(--theme-primary)] hover:text-[var(--theme-primary)] disabled:opacity-50"
+          class="px-2 py-0.5 text-[9px] font-semibold tracking-wide border transition-all duration-150 bg-[var(--theme-bg-tertiary)] border-[var(--theme-border-primary)] text-[var(--theme-text-tertiary)] hover:border-[var(--theme-primary)] hover:text-[var(--theme-primary)] disabled:opacity-50"
         >
           {{ loading ? '...' : 'REFRESH' }}
         </button>
@@ -146,7 +146,7 @@
                 v-for="section in tree"
                 :key="section.id"
                 @click="navigate(section.id)"
-                class="p-4 rounded border border-[var(--theme-border-primary)] bg-[var(--theme-bg-secondary)] hover:border-[var(--theme-primary)] transition-colors text-left"
+                class="p-4 border border-[var(--theme-border-primary)] bg-[var(--theme-bg-secondary)] hover:border-[var(--theme-primary)] transition-colors text-left"
               >
                 <div class="text-2xl mb-2">{{ section.icon }}</div>
                 <div class="text-sm font-semibold text-[var(--theme-text-primary)]">{{ section.label }}</div>
@@ -162,14 +162,14 @@
             <div class="flex items-center gap-2 mb-1">
               <span class="text-xl">{{ selectedNode.icon }}</span>
               <h2 class="text-lg font-bold text-[var(--theme-text-primary)]">{{ sectionDoc?.title || selectedNode.label }}</h2>
-              <span class="px-1.5 py-0.5 rounded text-[10px] font-mono-data bg-[var(--theme-bg-tertiary)] text-[var(--theme-text-tertiary)]">{{ selectedNode.badge }}</span>
+              <span class="px-1.5 py-0.5 text-[10px] font-mono-data bg-[var(--theme-bg-tertiary)] text-[var(--theme-text-tertiary)]">{{ selectedNode.badge }}</span>
             </div>
             <p class="text-sm text-[var(--theme-text-secondary)] mb-4 leading-relaxed">
               {{ sectionDoc?.description }}
             </p>
 
             <!-- Section documentation -->
-            <div v-if="sectionDoc?.details" class="mb-5 p-4 rounded border border-[var(--theme-border-primary)] bg-[var(--theme-bg-secondary)]">
+            <div v-if="sectionDoc?.details" class="mb-5 p-4 border border-[var(--theme-border-primary)] bg-[var(--theme-bg-secondary)]">
               <div class="text-[10px] font-semibold tracking-[0.1em] uppercase text-[var(--theme-text-tertiary)] mb-2">Quick Reference</div>
               <ul class="space-y-1.5">
                 <li v-for="(d, i) in sectionDoc.details" :key="i" class="flex items-start gap-2 text-xs text-[var(--theme-text-secondary)]">
@@ -188,7 +188,7 @@
                 v-for="child in selectedNode.children"
                 :key="child.id"
                 @click="navigate(child.id)"
-                class="w-full text-left p-3 rounded border border-[var(--theme-border-primary)] bg-[var(--theme-bg-secondary)] hover:border-[var(--theme-border-secondary)] transition-colors flex items-center gap-3"
+                class="w-full text-left p-3 border border-[var(--theme-border-primary)] bg-[var(--theme-bg-secondary)] hover:border-[var(--theme-border-secondary)] transition-colors flex items-center gap-3"
               >
                 <span class="text-sm">{{ child.icon }}</span>
                 <div class="flex-1 min-w-0">
@@ -197,7 +197,7 @@
                 </div>
                 <span
                   v-if="child.badge"
-                  class="px-1.5 py-0.5 rounded text-[9px] font-mono-data uppercase border shrink-0"
+                  class="px-1.5 py-0.5 text-[9px] font-mono-data uppercase border shrink-0"
                   :class="badgeClass(child.badgeColor)"
                 >{{ child.badge }}</span>
                 <svg class="w-3.5 h-3.5 text-[var(--theme-text-tertiary)] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -219,7 +219,7 @@
             <div class="flex items-center gap-2 mb-1">
               <span class="text-lg">{{ selectedNode.icon }}</span>
               <h2 class="text-base font-bold text-[var(--theme-text-primary)]">{{ selectedNode.label }}</h2>
-              <span v-if="selectedNode.badge" class="px-1.5 py-0.5 rounded text-[10px] font-mono-data bg-[var(--theme-bg-tertiary)] text-[var(--theme-text-tertiary)]">{{ selectedNode.badge }} items</span>
+              <span v-if="selectedNode.badge" class="px-1.5 py-0.5 text-[10px] font-mono-data bg-[var(--theme-bg-tertiary)] text-[var(--theme-text-tertiary)]">{{ selectedNode.badge }} items</span>
             </div>
 
             <div v-if="selectedNode.children" class="space-y-2 mt-4">
@@ -227,7 +227,7 @@
                 v-for="child in selectedNode.children"
                 :key="child.id"
                 @click="navigate(child.id)"
-                class="w-full text-left p-3 rounded border border-[var(--theme-border-primary)] bg-[var(--theme-bg-secondary)] hover:border-[var(--theme-border-secondary)] transition-colors flex items-center gap-3"
+                class="w-full text-left p-3 border border-[var(--theme-border-primary)] bg-[var(--theme-bg-secondary)] hover:border-[var(--theme-border-secondary)] transition-colors flex items-center gap-3"
               >
                 <span class="text-sm">{{ child.icon }}</span>
                 <div class="flex-1 min-w-0">
@@ -251,27 +251,27 @@
                 <h2 class="text-base font-bold text-[var(--theme-text-primary)]">{{ skillData!.name }}</h2>
               </div>
               <div class="flex items-center gap-2 mb-4 flex-wrap">
-                <span class="px-1.5 py-0.5 rounded text-[9px] font-mono-data uppercase bg-[var(--theme-bg-tertiary)] text-[var(--theme-text-tertiary)] border border-[var(--theme-border-primary)]">
+                <span class="px-1.5 py-0.5 text-[9px] font-mono-data uppercase bg-[var(--theme-bg-tertiary)] text-[var(--theme-text-tertiary)] border border-[var(--theme-border-primary)]">
                   {{ skillData!.pluginName }}
                 </span>
                 <span
                   v-if="skillData!.type"
-                  class="px-1.5 py-0.5 rounded text-[9px] font-mono-data uppercase border"
+                  class="px-1.5 py-0.5 text-[9px] font-mono-data uppercase border"
                   :class="skillData!.type === 'agent' ? 'bg-blue-500/10 text-blue-400 border-blue-500/30' : skillData!.type === 'command' ? 'bg-green-500/10 text-green-400 border-green-500/30' : 'bg-yellow-500/10 text-yellow-400 border-yellow-500/30'"
                 >{{ skillData!.type }}</span>
                 <span v-if="skillData!.author" class="text-[10px] text-[var(--theme-text-tertiary)]">by {{ skillData!.author }}</span>
               </div>
 
-              <div class="p-4 rounded border border-[var(--theme-border-primary)] bg-[var(--theme-bg-secondary)] mb-3">
+              <div class="p-4 border border-[var(--theme-border-primary)] bg-[var(--theme-bg-secondary)] mb-3">
                 <div class="text-[10px] font-semibold tracking-[0.1em] uppercase text-[var(--theme-text-tertiary)] mb-2">Description</div>
                 <p class="text-sm text-[var(--theme-text-secondary)] leading-relaxed">
                   {{ skillData!.description || 'No description provided.' }}
                 </p>
               </div>
 
-              <div class="p-4 rounded border border-[var(--theme-border-primary)] bg-[var(--theme-bg-secondary)]">
+              <div class="p-4 border border-[var(--theme-border-primary)] bg-[var(--theme-bg-secondary)]">
                 <div class="text-[10px] font-semibold tracking-[0.1em] uppercase text-[var(--theme-text-tertiary)] mb-2">Usage</div>
-                <div class="font-mono-data text-xs text-[var(--theme-primary)] bg-[var(--theme-bg-tertiary)] px-3 py-2 rounded">
+                <div class="font-mono-data text-xs text-[var(--theme-primary)] bg-[var(--theme-bg-tertiary)] px-3 py-2">
                   {{ skillData!.type === 'command' ? '/' + skillData!.pluginName + ':' + skillData!.name : skillData!.type === 'agent' ? 'Task agent: ' + skillData!.pluginName + ':' + skillData!.name : '/' + skillData!.name }}
                 </div>
               </div>
@@ -283,38 +283,38 @@
                 <span class="text-lg">&zwnj;&#11041;</span>
                 <h2 class="text-base font-bold text-[var(--theme-text-primary)]">{{ mcpData!.name }}</h2>
                 <span
-                  class="px-1.5 py-0.5 rounded text-[9px] font-mono-data uppercase border"
+                  class="px-1.5 py-0.5 text-[9px] font-mono-data uppercase border"
                   :class="badgeClass(mcpData!.transport === 'stdio' ? 'green' : mcpData!.transport === 'sse' ? 'blue' : 'yellow')"
                 >{{ mcpData!.transport }}</span>
               </div>
 
               <div class="space-y-3 mt-4">
-                <div v-if="mcpData!.command" class="p-4 rounded border border-[var(--theme-border-primary)] bg-[var(--theme-bg-secondary)]">
+                <div v-if="mcpData!.command" class="p-4 border border-[var(--theme-border-primary)] bg-[var(--theme-bg-secondary)]">
                   <div class="text-[10px] font-semibold tracking-[0.1em] uppercase text-[var(--theme-text-tertiary)] mb-2">Command</div>
-                  <div class="font-mono-data text-xs text-[var(--theme-text-primary)] bg-[var(--theme-bg-tertiary)] px-3 py-2 rounded break-all">
+                  <div class="font-mono-data text-xs text-[var(--theme-text-primary)] bg-[var(--theme-bg-tertiary)] px-3 py-2 break-all">
                     {{ mcpData!.command }}
                   </div>
                 </div>
 
-                <div v-if="mcpData!.args && mcpData!.args.length > 0" class="p-4 rounded border border-[var(--theme-border-primary)] bg-[var(--theme-bg-secondary)]">
+                <div v-if="mcpData!.args && mcpData!.args.length > 0" class="p-4 border border-[var(--theme-border-primary)] bg-[var(--theme-bg-secondary)]">
                   <div class="text-[10px] font-semibold tracking-[0.1em] uppercase text-[var(--theme-text-tertiary)] mb-2">Arguments</div>
                   <div class="space-y-1">
                     <div
                       v-for="(arg, i) in mcpData!.args"
                       :key="i"
-                      class="font-mono-data text-xs text-[var(--theme-text-secondary)] bg-[var(--theme-bg-tertiary)] px-3 py-1.5 rounded break-all"
+                      class="font-mono-data text-xs text-[var(--theme-text-secondary)] bg-[var(--theme-bg-tertiary)] px-3 py-1.5 break-all"
                     >{{ arg }}</div>
                   </div>
                 </div>
 
-                <div v-if="mcpData!.url" class="p-4 rounded border border-[var(--theme-border-primary)] bg-[var(--theme-bg-secondary)]">
+                <div v-if="mcpData!.url" class="p-4 border border-[var(--theme-border-primary)] bg-[var(--theme-bg-secondary)]">
                   <div class="text-[10px] font-semibold tracking-[0.1em] uppercase text-[var(--theme-text-tertiary)] mb-2">URL</div>
-                  <div class="font-mono-data text-xs text-[var(--theme-primary)] bg-[var(--theme-bg-tertiary)] px-3 py-2 rounded break-all">
+                  <div class="font-mono-data text-xs text-[var(--theme-primary)] bg-[var(--theme-bg-tertiary)] px-3 py-2 break-all">
                     {{ mcpData!.url }}
                   </div>
                 </div>
 
-                <div class="p-4 rounded border border-[var(--theme-border-primary)] bg-[var(--theme-bg-secondary)]">
+                <div class="p-4 border border-[var(--theme-border-primary)] bg-[var(--theme-bg-secondary)]">
                   <div class="text-[10px] font-semibold tracking-[0.1em] uppercase text-[var(--theme-text-tertiary)] mb-2">Configuration</div>
                   <p class="text-xs text-[var(--theme-text-secondary)] leading-relaxed">
                     Defined in <span class="font-mono-data text-[var(--theme-primary)]">~/.claude/settings.json</span> under <span class="font-mono-data text-[var(--theme-primary)]">mcpServers.{{ mcpData!.name }}</span>
@@ -328,18 +328,18 @@
               <div class="flex items-center gap-2 mb-1">
                 <span class="text-lg">{{ marketplaceData!.category === 'registry' ? '\u25C8' : '\u2605' }}</span>
                 <h2 class="text-base font-bold text-[var(--theme-text-primary)]">{{ marketplaceData!.name }}</h2>
-                <span class="px-1.5 py-0.5 rounded text-[9px] font-mono-data uppercase bg-[var(--theme-bg-tertiary)] text-[var(--theme-text-tertiary)] border border-[var(--theme-border-primary)]">
+                <span class="px-1.5 py-0.5 text-[9px] font-mono-data uppercase bg-[var(--theme-bg-tertiary)] text-[var(--theme-text-tertiary)] border border-[var(--theme-border-primary)]">
                   {{ marketplaceData!.category }}
                 </span>
               </div>
 
               <div class="space-y-3 mt-4">
-                <div class="p-4 rounded border border-[var(--theme-border-primary)] bg-[var(--theme-bg-secondary)]">
+                <div class="p-4 border border-[var(--theme-border-primary)] bg-[var(--theme-bg-secondary)]">
                   <div class="text-[10px] font-semibold tracking-[0.1em] uppercase text-[var(--theme-text-tertiary)] mb-2">Description</div>
                   <p class="text-sm text-[var(--theme-text-secondary)] leading-relaxed">{{ marketplaceData!.description }}</p>
                 </div>
 
-                <div class="p-4 rounded border border-[var(--theme-border-primary)] bg-[var(--theme-bg-secondary)]">
+                <div class="p-4 border border-[var(--theme-border-primary)] bg-[var(--theme-bg-secondary)]">
                   <div class="text-[10px] font-semibold tracking-[0.1em] uppercase text-[var(--theme-text-tertiary)] mb-2">URL</div>
                   <a
                     :href="marketplaceData!.url"
@@ -353,7 +353,7 @@
                   :href="marketplaceData!.url"
                   target="_blank"
                   rel="noopener noreferrer"
-                  class="inline-flex items-center gap-2 px-4 py-2 rounded border border-[var(--theme-primary)] text-[var(--theme-primary)] text-sm font-semibold hover:bg-[var(--theme-primary)]/10 transition-colors"
+                  class="inline-flex items-center gap-2 px-4 py-2 border border-[var(--theme-primary)] text-[var(--theme-primary)] text-sm font-semibold hover:bg-[var(--theme-primary)]/10 transition-colors"
                 >
                   <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" /><polyline points="15 3 21 3 21 9" /><line x1="10" y1="14" x2="21" y2="3" />

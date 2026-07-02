@@ -1,11 +1,11 @@
 <template>
   <div class="h-screen flex flex-col bg-[var(--theme-bg-secondary)]">
     <!-- Header — Navy bar inspired by Harris 3D Viewer ribbon -->
-    <header class="short:hidden bg-[#0F1934] shadow-lg border-b border-[var(--theme-border-primary)]" style="box-shadow: 0 2px 16px rgba(0,0,0,.35);">
+    <header class="short:hidden bg-harris-navy shadow-lg border-b border-[var(--theme-border-primary)]" style="box-shadow: 0 2px 16px rgba(0,0,0,.35);">
       <div class="px-4 py-3 mobile:py-1.5 mobile:px-2 flex items-center justify-between mobile:gap-2">
         <!-- Title Section - Hidden on mobile -->
         <div class="mobile:hidden flex items-center gap-3">
-          <div class="w-8 h-8 rounded flex items-center justify-center bg-[#29ADE4] font-label font-bold text-white text-sm">H</div>
+          <div class="w-8 h-8 flex items-center justify-center bg-[#29ADE4] font-label font-bold text-white text-sm">H</div>
           <div>
             <h1 class="font-label text-lg font-bold text-[#e8f4ff] tracking-wide uppercase" style="letter-spacing: 0.04em;">
               Mission Control
@@ -34,13 +34,13 @@
 
         <!-- Event Count + Actions — fabrication-mcp button style -->
         <div class="flex items-center gap-2">
-          <span class="font-mono-data text-xs px-2.5 py-1 rounded border text-[#00c8ff] bg-[#00c8ff11] border-[#00c8ff44]">
+          <span class="font-mono-data text-xs px-2.5 py-1 border text-[#00c8ff] bg-[#00c8ff11] border-[#00c8ff44]">
             {{ events.length }}
           </span>
 
           <button
             @click="handleClearClick"
-            class="px-2.5 py-1.5 mobile:p-1 rounded text-[11px] font-semibold tracking-wide border transition-all duration-150 bg-[var(--theme-bg-tertiary)] border-[var(--theme-border-secondary)] text-[var(--theme-text-secondary)] hover:bg-[var(--theme-hover-bg)] hover:border-[var(--theme-primary)] hover:text-[var(--theme-primary)]"
+            class="px-2.5 py-1.5 mobile:p-1 text-[11px] font-semibold tracking-wide border transition-all duration-150 bg-[var(--theme-bg-tertiary)] border-[var(--theme-border-secondary)] text-[var(--theme-text-secondary)] hover:bg-[var(--theme-hover-bg)] hover:border-[var(--theme-primary)] hover:text-[var(--theme-primary)]"
             title="Clear events"
           >
             CLEAR
@@ -48,7 +48,7 @@
 
           <button
             @click="showFilters = !showFilters"
-            class="px-2.5 py-1.5 mobile:p-1 rounded text-[11px] font-semibold tracking-wide border transition-all duration-150 bg-[var(--theme-bg-tertiary)] border-[var(--theme-border-secondary)] text-[var(--theme-text-secondary)] hover:bg-[var(--theme-hover-bg)] hover:border-[var(--theme-primary)] hover:text-[var(--theme-primary)]"
+            class="px-2.5 py-1.5 mobile:p-1 text-[11px] font-semibold tracking-wide border transition-all duration-150 bg-[var(--theme-bg-tertiary)] border-[var(--theme-border-secondary)] text-[var(--theme-text-secondary)] hover:bg-[var(--theme-hover-bg)] hover:border-[var(--theme-primary)] hover:text-[var(--theme-primary)]"
             :title="showFilters ? 'Hide filters' : 'Show filters'"
           >
             FILTERS
@@ -63,7 +63,7 @@
           <button
             v-if="panelManager.undockedPanels.value.length > 0"
             @click="panelManager.dockAll()"
-            class="px-2.5 py-1.5 mobile:p-1 rounded text-[11px] font-semibold tracking-wide border transition-all duration-150 bg-[var(--theme-bg-tertiary)] border-[var(--theme-border-secondary)] text-[var(--theme-accent-warning)] hover:bg-[var(--theme-hover-bg)] hover:border-[var(--theme-accent-warning)]"
+            class="px-2.5 py-1.5 mobile:p-1 text-[11px] font-semibold tracking-wide border transition-all duration-150 bg-[var(--theme-bg-tertiary)] border-[var(--theme-border-secondary)] text-[var(--theme-accent-warning)] hover:bg-[var(--theme-hover-bg)] hover:border-[var(--theme-accent-warning)]"
             title="Dock all floating panels"
           >
             DOCK ALL
@@ -73,25 +73,25 @@
           <div class="relative">
             <button
               @click="showPanelMenu = !showPanelMenu"
-              class="px-2.5 py-1.5 mobile:p-1 rounded text-[11px] font-semibold tracking-wide border transition-all duration-150 bg-[var(--theme-bg-tertiary)] border-[var(--theme-border-secondary)] text-[var(--theme-text-secondary)] hover:bg-[var(--theme-hover-bg)] hover:border-[var(--theme-primary)] hover:text-[var(--theme-primary)]"
+              class="px-2.5 py-1.5 mobile:p-1 text-[11px] font-semibold tracking-wide border transition-all duration-150 bg-[var(--theme-bg-tertiary)] border-[var(--theme-border-secondary)] text-[var(--theme-text-secondary)] hover:bg-[var(--theme-hover-bg)] hover:border-[var(--theme-primary)] hover:text-[var(--theme-primary)]"
               title="Panel visibility & layout"
             >
               PANELS
             </button>
             <div
               v-if="showPanelMenu"
-              class="absolute right-0 top-full mt-1 w-56 rounded-lg border border-[var(--theme-border-secondary)] bg-[#0c1528] shadow-xl z-50 py-1"
+              class="absolute right-0 top-full mt-1 w-56 border border-[var(--theme-border-secondary)] bg-[#0c1528] shadow-xl z-50 py-1"
               style="box-shadow: 0 8px 32px rgba(0,0,0,0.5);"
             >
               <!-- Quick actions -->
               <div class="flex gap-1 px-2 py-1.5 border-b border-[var(--theme-border-primary)]">
                 <button
                   @click="panelManager.expandAll()"
-                  class="flex-1 px-2 py-1 rounded text-[9px] font-semibold uppercase tracking-wider border border-[var(--theme-border-secondary)] text-[var(--theme-text-quaternary)] hover:border-[var(--theme-primary)] hover:text-[var(--theme-primary)] transition-colors"
+                  class="flex-1 px-2 py-1 text-[9px] font-semibold uppercase tracking-wider border border-[var(--theme-border-secondary)] text-[var(--theme-text-quaternary)] hover:border-[var(--theme-primary)] hover:text-[var(--theme-primary)] transition-colors"
                 >EXPAND ALL</button>
                 <button
                   @click="panelManager.collapseAll()"
-                  class="flex-1 px-2 py-1 rounded text-[9px] font-semibold uppercase tracking-wider border border-[var(--theme-border-secondary)] text-[var(--theme-text-quaternary)] hover:border-[var(--theme-primary)] hover:text-[var(--theme-primary)] transition-colors"
+                  class="flex-1 px-2 py-1 text-[9px] font-semibold uppercase tracking-wider border border-[var(--theme-border-secondary)] text-[var(--theme-text-quaternary)] hover:border-[var(--theme-primary)] hover:text-[var(--theme-primary)] transition-colors"
                 >COLLAPSE ALL</button>
               </div>
               <!-- Panel list (ordered) -->
@@ -118,7 +118,7 @@
 
           <button
             @click="handleThemeManagerClick"
-            class="px-2.5 py-1.5 mobile:p-1 rounded text-[11px] font-semibold tracking-wide border transition-all duration-150 bg-[var(--theme-bg-tertiary)] border-[var(--theme-border-secondary)] text-[var(--theme-text-secondary)] hover:bg-[var(--theme-hover-bg)] hover:border-[var(--theme-primary)] hover:text-[var(--theme-primary)]"
+            class="px-2.5 py-1.5 mobile:p-1 text-[11px] font-semibold tracking-wide border transition-all duration-150 bg-[var(--theme-bg-tertiary)] border-[var(--theme-border-secondary)] text-[var(--theme-text-secondary)] hover:bg-[var(--theme-hover-bg)] hover:border-[var(--theme-primary)] hover:text-[var(--theme-primary)]"
             title="Open theme manager"
           >
             THEMES
@@ -233,7 +233,7 @@
     <!-- Error message -->
     <div
       v-if="error"
-      class="fixed bottom-4 left-4 mobile:bottom-3 mobile:left-3 mobile:right-3 bg-red-100 border border-red-400 text-red-700 px-3 py-2 mobile:px-2 mobile:py-1.5 rounded mobile:text-xs"
+      class="fixed bottom-4 left-4 mobile:bottom-3 mobile:left-3 mobile:right-3 bg-red-100 border border-red-400 text-red-700 px-3 py-2 mobile:px-2 mobile:py-1.5 mobile:text-xs"
     >
       {{ error }}
     </div>

@@ -1,10 +1,10 @@
 <template>
-  <div class="rounded bg-[var(--theme-bg-tertiary)] border border-[var(--theme-border-primary)] p-3" style="border-top: 2px solid #ff3f5a;">
+  <div class="bg-[var(--theme-bg-tertiary)] border border-[var(--theme-border-primary)] p-3" style="border-top: 2px solid #ff3f5a;">
     <h3 class="section-title text-[10px] text-[var(--theme-text-quaternary)] mb-2">
       Error Analysis
       <span
         v-if="failureEvents.length > 0"
-        class="ml-2 font-mono-data text-[9px] px-1.5 py-0.5 rounded border"
+        class="ml-2 font-mono-data text-[9px] px-1.5 py-0.5 border"
         style="color: #ff3f5a; background: #ff3f5a11; border-color: #ff3f5a44;"
       >
         {{ failureEvents.length }} FAILURES
@@ -24,7 +24,7 @@
       <div
         v-for="(evt, i) in failureEvents.slice(0, 20)"
         :key="i"
-        class="rounded border border-[var(--theme-border-primary)] bg-[var(--theme-bg-secondary)]"
+        class="border border-[var(--theme-border-primary)] bg-[var(--theme-bg-secondary)]"
       >
         <button
           class="w-full flex items-center justify-between px-2 py-1.5 text-left hover:bg-[var(--theme-hover-bg)] transition-colors duration-100"

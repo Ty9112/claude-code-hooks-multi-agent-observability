@@ -1,12 +1,12 @@
 <template>
-  <div class="rounded bg-[var(--theme-bg-tertiary)] border border-[var(--theme-border-primary)] p-3" style="border-top: 2px solid #14b8a6;">
+  <div class="bg-[var(--theme-bg-tertiary)] border border-[var(--theme-border-primary)] p-3" style="border-top: 2px solid #14b8a6;">
     <h3 class="section-title text-[10px] text-[var(--theme-text-quaternary)] mb-2">Tool Timeline</h3>
     <div class="relative">
       <canvas ref="timelineCanvas" class="w-full" style="height: 160px"></canvas>
       <!-- Tooltip -->
       <div
         v-if="tooltip.visible"
-        class="fixed z-50 pointer-events-none px-2.5 py-1.5 rounded text-[11px] font-mono-data shadow-lg border border-[var(--theme-border-secondary)]"
+        class="fixed z-50 pointer-events-none px-2.5 py-1.5 text-[11px] font-mono-data shadow-lg border border-[var(--theme-border-secondary)]"
         :style="{
           left: tooltip.x + 12 + 'px',
           top: tooltip.y - 8 + 'px',

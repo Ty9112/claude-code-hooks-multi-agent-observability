@@ -1,6 +1,6 @@
 <template>
   <div
-    class="rounded bg-[var(--theme-bg-tertiary)] border border-[var(--theme-border-primary)] transition-all duration-150 hover:translate-y-[-2px]"
+    class="bg-[var(--theme-bg-tertiary)] border border-[var(--theme-border-primary)] transition-all duration-150 hover:translate-y-[-2px]"
     :style="{
       borderTopWidth: '2px',
       borderTopColor: appColor,
@@ -16,7 +16,7 @@
             <input
               ref="aliasInput"
               v-model="aliasValue"
-              class="font-label text-[12px] font-semibold tracking-wider uppercase bg-[var(--theme-bg-secondary)] border border-[var(--theme-primary)] rounded px-1.5 py-0.5 text-[var(--theme-text-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--theme-primary)] w-full max-w-[180px]"
+              class="font-label text-[12px] font-semibold tracking-wider uppercase bg-[var(--theme-bg-secondary)] border border-[var(--theme-primary)] px-1.5 py-0.5 text-[var(--theme-text-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--theme-primary)] w-full max-w-[180px]"
               :style="{ color: appColor }"
               :placeholder="session.agentId"
               @keydown.enter="commitAlias"
@@ -47,7 +47,7 @@
           <!-- Model badge -->
           <span
             v-if="session.modelName"
-            class="font-mono-data text-[9px] px-1.5 py-0.5 rounded border bg-[var(--theme-bg-secondary)] text-[var(--theme-text-quaternary)] border-[var(--theme-border-primary)]"
+            class="font-mono-data text-[9px] px-1.5 py-0.5 border bg-[var(--theme-bg-secondary)] text-[var(--theme-text-quaternary)] border-[var(--theme-border-primary)]"
           >
             {{ formatModelName(session.modelName) }}
           </span>
@@ -101,7 +101,7 @@
         >
           <span class="transition-transform duration-150 text-[8px]" :class="{ 'rotate-90': showTasks }">&#9654;</span>
           Tasks
-          <span v-if="pendingCount > 0" class="ml-1 px-1 py-0 rounded-full text-[8px] bg-[var(--theme-primary)] text-[var(--theme-bg-primary)]">{{ pendingCount }}</span>
+          <span v-if="pendingCount > 0" class="ml-1 px-1 py-0 text-[8px] bg-[var(--theme-primary)] text-[var(--theme-bg-primary)]">{{ pendingCount }}</span>
         </button>
 
         <div v-if="showTasks" class="mt-1.5 space-y-1">
@@ -112,7 +112,7 @@
             class="flex items-center gap-1.5 group"
           >
             <button
-              class="w-3.5 h-3.5 shrink-0 rounded border flex items-center justify-center transition-colors text-[8px]"
+              class="w-3.5 h-3.5 shrink-0 border flex items-center justify-center transition-colors text-[8px]"
               :class="task.done
                 ? 'bg-[var(--theme-primary)] border-[var(--theme-primary)] text-[var(--theme-bg-primary)]'
                 : 'border-[var(--theme-border-secondary)] hover:border-[var(--theme-primary)]'"
@@ -139,12 +139,12 @@
           <div class="flex items-center gap-1">
             <input
               v-model="newTaskText"
-              class="flex-1 px-1.5 py-0.5 rounded text-[11px] font-mono-data bg-[var(--theme-bg-secondary)] border border-[var(--theme-border-primary)] text-[var(--theme-text-primary)] placeholder-[var(--theme-text-quaternary)] focus:outline-none focus:border-[var(--theme-primary)]"
+              class="flex-1 px-1.5 py-0.5 text-[11px] font-mono-data bg-[var(--theme-bg-secondary)] border border-[var(--theme-border-primary)] text-[var(--theme-text-primary)] placeholder-[var(--theme-text-quaternary)] focus:outline-none focus:border-[var(--theme-primary)]"
               placeholder="Add task..."
               @keydown.enter="handleAddTask"
             />
             <button
-              class="shrink-0 px-1.5 py-0.5 rounded text-[9px] font-semibold uppercase bg-[var(--theme-primary)] text-[var(--theme-bg-primary)] hover:opacity-80 transition-opacity"
+              class="shrink-0 px-1.5 py-0.5 text-[9px] font-semibold uppercase bg-[var(--theme-primary)] text-[var(--theme-bg-primary)] hover:opacity-80 transition-opacity"
               @click="handleAddTask"
             >
               +

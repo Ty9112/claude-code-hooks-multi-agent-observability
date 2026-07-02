@@ -2,7 +2,7 @@
   <div class="relative" ref="menuRef">
     <button
       @click="open = !open"
-      class="px-2.5 py-1.5 mobile:p-1 rounded text-[11px] font-semibold tracking-wide border transition-all duration-150 bg-[var(--theme-bg-tertiary)] border-[var(--theme-border-secondary)] text-[var(--theme-text-secondary)] hover:bg-[var(--theme-hover-bg)] hover:border-[var(--theme-primary)] hover:text-[var(--theme-primary)]"
+      class="px-2.5 py-1.5 mobile:p-1 text-[11px] font-semibold tracking-wide border transition-all duration-150 bg-[var(--theme-bg-tertiary)] border-[var(--theme-border-secondary)] text-[var(--theme-text-secondary)] hover:bg-[var(--theme-hover-bg)] hover:border-[var(--theme-primary)] hover:text-[var(--theme-primary)]"
       title="Export data"
     >
       EXPORT
@@ -11,7 +11,7 @@
     <Transition name="dropdown">
       <div
         v-if="open"
-        class="absolute right-0 top-full mt-1 w-56 rounded-lg border border-[var(--theme-border-secondary)] bg-[var(--theme-bg-primary)] shadow-2xl overflow-hidden"
+        class="absolute right-0 top-full mt-1 w-56 border border-[var(--theme-border-secondary)] bg-[var(--theme-bg-primary)] shadow-2xl overflow-hidden"
         style="z-index: 9999; box-shadow: 0 8px 32px rgba(0,0,0,0.5);"
       >
         <div class="p-1.5">
@@ -21,7 +21,7 @@
 
           <button
             @click="handleExport('events-csv')"
-            class="w-full flex items-center gap-2.5 px-2.5 py-2 rounded text-left text-[11px] hover:bg-[var(--theme-bg-tertiary)] transition-colors group"
+            class="w-full flex items-center gap-2.5 px-2.5 py-2 text-left text-[11px] hover:bg-[var(--theme-bg-tertiary)] transition-colors group"
           >
             <span class="w-5 text-center text-[var(--theme-text-quaternary)] group-hover:text-[var(--theme-accent-info)]">CSV</span>
             <span class="text-[var(--theme-text-secondary)]">Events</span>
@@ -30,7 +30,7 @@
 
           <button
             @click="handleExport('sessions-csv')"
-            class="w-full flex items-center gap-2.5 px-2.5 py-2 rounded text-left text-[11px] hover:bg-[var(--theme-bg-tertiary)] transition-colors group"
+            class="w-full flex items-center gap-2.5 px-2.5 py-2 text-left text-[11px] hover:bg-[var(--theme-bg-tertiary)] transition-colors group"
           >
             <span class="w-5 text-center text-[var(--theme-text-quaternary)] group-hover:text-[var(--theme-accent-info)]">CSV</span>
             <span class="text-[var(--theme-text-secondary)]">Sessions</span>
@@ -39,7 +39,7 @@
 
           <button
             @click="handleExport('analytics-csv')"
-            class="w-full flex items-center gap-2.5 px-2.5 py-2 rounded text-left text-[11px] hover:bg-[var(--theme-bg-tertiary)] transition-colors group"
+            class="w-full flex items-center gap-2.5 px-2.5 py-2 text-left text-[11px] hover:bg-[var(--theme-bg-tertiary)] transition-colors group"
           >
             <span class="w-5 text-center text-[var(--theme-text-quaternary)] group-hover:text-[var(--theme-accent-info)]">CSV</span>
             <span class="text-[var(--theme-text-secondary)]">Analytics</span>
@@ -49,7 +49,7 @@
 
           <button
             @click="handleExport('json')"
-            class="w-full flex items-center gap-2.5 px-2.5 py-2 rounded text-left text-[11px] hover:bg-[var(--theme-bg-tertiary)] transition-colors group"
+            class="w-full flex items-center gap-2.5 px-2.5 py-2 text-left text-[11px] hover:bg-[var(--theme-bg-tertiary)] transition-colors group"
           >
             <span class="w-5 text-center text-[var(--theme-text-quaternary)] group-hover:text-[#ffaa00]">JSON</span>
             <span class="text-[var(--theme-text-secondary)]">Full Export</span>
@@ -58,7 +58,7 @@
 
           <button
             @click="handleExport('markdown')"
-            class="w-full flex items-center gap-2.5 px-2.5 py-2 rounded text-left text-[11px] hover:bg-[var(--theme-bg-tertiary)] transition-colors group"
+            class="w-full flex items-center gap-2.5 px-2.5 py-2 text-left text-[11px] hover:bg-[var(--theme-bg-tertiary)] transition-colors group"
           >
             <span class="w-5 text-center text-[var(--theme-text-quaternary)] group-hover:text-[#a855f7]">MD</span>
             <span class="text-[var(--theme-text-secondary)]">Report</span>
@@ -69,7 +69,7 @@
 
           <button
             @click="handleExport('pdf')"
-            class="w-full flex items-center gap-2.5 px-2.5 py-2 rounded text-left text-[11px] hover:bg-[var(--theme-bg-tertiary)] transition-colors group"
+            class="w-full flex items-center gap-2.5 px-2.5 py-2 text-left text-[11px] hover:bg-[var(--theme-bg-tertiary)] transition-colors group"
           >
             <span class="w-5 text-center text-[var(--theme-text-quaternary)] group-hover:text-[#ff3f5a]">PDF</span>
             <span class="text-[var(--theme-text-secondary)]">Print / PDF</span>

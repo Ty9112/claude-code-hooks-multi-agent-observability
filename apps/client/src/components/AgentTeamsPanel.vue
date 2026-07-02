@@ -3,7 +3,7 @@
     <!-- Team Header -->
     <div v-if="teamName" class="flex items-center gap-2 mb-1">
       <span class="text-xs font-bold uppercase tracking-wider text-purple-400">Team</span>
-      <span class="text-sm font-bold text-[var(--theme-text-primary)] px-2 py-0.5 rounded border border-purple-500/40 bg-purple-500/10">
+      <span class="text-sm font-bold text-[var(--theme-text-primary)] px-2 py-0.5 border border-purple-500/40 bg-purple-500/10">
         {{ teamName }}
       </span>
     </div>
@@ -13,7 +13,7 @@
       <h3 class="text-[10px] font-bold uppercase tracking-wider text-[var(--theme-text-tertiary)]">Task Board</h3>
       <div class="grid grid-cols-3 gap-2 min-h-[80px]">
         <!-- Pending Column -->
-        <div class="rounded-lg bg-[var(--theme-bg-tertiary)] border border-[var(--theme-border-primary)] p-2">
+        <div class="bg-[var(--theme-bg-tertiary)] border border-[var(--theme-border-primary)] p-2">
           <div class="flex items-center justify-between mb-2">
             <span class="text-[10px] font-bold uppercase tracking-wider text-gray-400">Pending</span>
             <span class="text-[10px] font-mono text-gray-500">({{ pendingTasks.length }})</span>
@@ -22,7 +22,7 @@
             <div
               v-for="task in pendingTasks"
               :key="task.id"
-              class="task-card rounded p-1.5 border-l-2 bg-[var(--theme-bg-primary)] border-gray-500 transition-all duration-300"
+              class="task-card p-1.5 border-l-2 bg-[var(--theme-bg-primary)] border-gray-500 transition-all duration-300"
             >
               <div class="text-xs font-semibold text-[var(--theme-text-primary)] truncate">{{ task.subject }}</div>
               <div v-if="task.owner" class="text-[10px] text-[var(--theme-text-tertiary)] mt-0.5 truncate">{{ task.owner }}</div>
@@ -33,7 +33,7 @@
         </div>
 
         <!-- In Progress Column -->
-        <div class="rounded-lg bg-[var(--theme-bg-tertiary)] border border-blue-500/30 p-2">
+        <div class="bg-[var(--theme-bg-tertiary)] border border-blue-500/30 p-2">
           <div class="flex items-center justify-between mb-2">
             <span class="text-[10px] font-bold uppercase tracking-wider text-blue-400">In Progress</span>
             <span class="text-[10px] font-mono text-blue-500">({{ inProgressTasks.length }})</span>
@@ -42,7 +42,7 @@
             <div
               v-for="task in inProgressTasks"
               :key="task.id"
-              class="task-card rounded p-1.5 border-l-2 bg-[var(--theme-bg-primary)] border-blue-500 transition-all duration-300"
+              class="task-card p-1.5 border-l-2 bg-[var(--theme-bg-primary)] border-blue-500 transition-all duration-300"
             >
               <div class="flex items-center gap-1">
                 <span v-if="task.activeForm" class="inline-block w-2 h-2 rounded-full bg-blue-400 animate-pulse"></span>
@@ -56,7 +56,7 @@
         </div>
 
         <!-- Completed Column -->
-        <div class="rounded-lg bg-[var(--theme-bg-tertiary)] border border-green-500/30 p-2">
+        <div class="bg-[var(--theme-bg-tertiary)] border border-green-500/30 p-2">
           <div class="flex items-center justify-between mb-2">
             <span class="text-[10px] font-bold uppercase tracking-wider text-green-400">Completed</span>
             <span class="text-[10px] font-mono text-green-500">({{ completedTasks.length }})</span>
@@ -65,7 +65,7 @@
             <div
               v-for="task in completedTasks"
               :key="task.id"
-              class="task-card rounded p-1.5 border-l-2 bg-[var(--theme-bg-primary)] border-green-500 opacity-75 transition-all duration-300"
+              class="task-card p-1.5 border-l-2 bg-[var(--theme-bg-primary)] border-green-500 opacity-75 transition-all duration-300"
             >
               <div class="text-xs font-semibold text-[var(--theme-text-secondary)] truncate line-through">{{ task.subject }}</div>
               <div v-if="task.owner" class="text-[10px] text-[var(--theme-text-tertiary)] mt-0.5 truncate">{{ task.owner }}</div>
@@ -83,7 +83,7 @@
         <div
           v-for="agent in agentList"
           :key="agent.agentId"
-          class="flex items-center gap-1.5 px-2 py-1 rounded-lg border bg-[var(--theme-bg-primary)] cursor-pointer hover:border-[var(--theme-primary)] transition-all duration-200"
+          class="flex items-center gap-1.5 px-2 py-1 border bg-[var(--theme-bg-primary)] cursor-pointer hover:border-[var(--theme-primary)] transition-all duration-200"
           :class="agent.status === 'running' ? 'border-[var(--theme-border-secondary)]' : 'border-[var(--theme-border-primary)] opacity-60'"
           :title="agentTooltip(agent)"
           @click="$emit('select-agent', agent.sourceApp)"
@@ -126,7 +126,7 @@
     <!-- Section 3: Message Flow -->
     <div v-if="messages.length > 0" class="space-y-2">
       <h3 class="text-[10px] font-bold uppercase tracking-wider text-[var(--theme-text-tertiary)]">Message Flow</h3>
-      <div class="max-h-[120px] overflow-y-auto rounded-lg bg-[var(--theme-bg-tertiary)] border border-[var(--theme-border-primary)] p-2 space-y-1" ref="messageContainer">
+      <div class="max-h-[120px] overflow-y-auto bg-[var(--theme-bg-tertiary)] border border-[var(--theme-border-primary)] p-2 space-y-1" ref="messageContainer">
         <div
           v-for="(msg, idx) in messages"
           :key="idx"

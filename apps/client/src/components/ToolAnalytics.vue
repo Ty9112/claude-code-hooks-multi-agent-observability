@@ -9,7 +9,7 @@
         <span class="section-title text-[13px] text-[var(--theme-primary)]">
           Analytics
         </span>
-        <span class="font-mono-data text-[10px] px-2 py-0.5 rounded border text-[var(--theme-text-quaternary)] bg-[var(--theme-bg-tertiary)] border-[var(--theme-border-primary)]">
+        <span class="font-mono-data text-[10px] px-2 py-0.5 border text-[var(--theme-text-quaternary)] bg-[var(--theme-bg-tertiary)] border-[var(--theme-border-primary)]">
           {{ analytics.toolStats.length }} TOOLS
         </span>
       </div>
@@ -24,19 +24,19 @@
         <!-- Top row: 3 panels -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-3 mobile:gap-2">
           <!-- Panel 1: Tool Frequency -->
-          <div class="relative rounded bg-[var(--theme-bg-tertiary)] border border-[var(--theme-border-primary)] p-3" style="border-top: 2px solid #00c8ff;">
+          <div class="relative bg-[var(--theme-bg-tertiary)] border border-[var(--theme-border-primary)] p-3" style="border-top: 2px solid #00c8ff;">
             <h3 class="section-title text-[10px] text-[var(--theme-text-quaternary)] mb-2">Tool Frequency</h3>
             <canvas ref="toolFreqCanvas" class="w-full" :style="{ height: canvasHeight + 'px' }"></canvas>
           </div>
 
           <!-- Panel 2: Success/Failure Rates -->
-          <div class="relative rounded bg-[var(--theme-bg-tertiary)] border border-[var(--theme-border-primary)] p-3" style="border-top: 2px solid #00e57a;">
+          <div class="relative bg-[var(--theme-bg-tertiary)] border border-[var(--theme-border-primary)] p-3" style="border-top: 2px solid #00e57a;">
             <h3 class="section-title text-[10px] text-[var(--theme-text-quaternary)] mb-2">Success / Failure</h3>
             <canvas ref="successCanvas" class="w-full" :style="{ height: canvasHeight + 'px' }"></canvas>
           </div>
 
           <!-- Panel 3: Event Type Distribution -->
-          <div class="relative rounded bg-[var(--theme-bg-tertiary)] border border-[var(--theme-border-primary)] p-3" style="border-top: 2px solid #ffaa00;">
+          <div class="relative bg-[var(--theme-bg-tertiary)] border border-[var(--theme-border-primary)] p-3" style="border-top: 2px solid #ffaa00;">
             <h3 class="section-title text-[10px] text-[var(--theme-text-quaternary)] mb-2">Event Types</h3>
             <canvas ref="donutCanvas" class="w-full" :style="{ height: canvasHeight + 'px' }"></canvas>
           </div>
@@ -45,13 +45,13 @@
         <!-- Middle row: 2 panels -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-3 mobile:gap-2">
           <!-- Panel 4: Events/Min Sparkline -->
-          <div class="relative rounded bg-[var(--theme-bg-tertiary)] border border-[var(--theme-border-primary)] p-3" style="border-top: 2px solid #29ADE4;">
+          <div class="relative bg-[var(--theme-bg-tertiary)] border border-[var(--theme-border-primary)] p-3" style="border-top: 2px solid #29ADE4;">
             <h3 class="section-title text-[10px] text-[var(--theme-text-quaternary)] mb-2">Events / Min</h3>
             <canvas ref="sparklineCanvas" class="w-full" style="height: 100px"></canvas>
           </div>
 
           <!-- Panel 5: Most Active Sessions -->
-          <div class="relative rounded bg-[var(--theme-bg-tertiary)] border border-[var(--theme-border-primary)] p-3" style="border-top: 2px solid #a855f7;">
+          <div class="relative bg-[var(--theme-bg-tertiary)] border border-[var(--theme-border-primary)] p-3" style="border-top: 2px solid #a855f7;">
             <h3 class="section-title text-[10px] text-[var(--theme-text-quaternary)] mb-2">Most Active Sessions</h3>
             <canvas ref="sessionsCanvas" class="w-full" :style="{ height: canvasHeight + 'px' }"></canvas>
           </div>
@@ -71,7 +71,7 @@
     <!-- Tooltip overlay -->
     <div
       v-if="tooltip.visible"
-      class="fixed z-50 pointer-events-none px-2.5 py-1.5 rounded text-[11px] font-mono-data shadow-lg border border-[var(--theme-border-secondary)]"
+      class="fixed z-50 pointer-events-none px-2.5 py-1.5 text-[11px] font-mono-data shadow-lg border border-[var(--theme-border-secondary)]"
       :style="{
         left: tooltip.x + 12 + 'px',
         top: tooltip.y - 8 + 'px',
