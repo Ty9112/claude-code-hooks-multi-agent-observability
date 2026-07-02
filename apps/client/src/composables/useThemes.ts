@@ -37,7 +37,7 @@ const PREDEFINED_THEMES: Record<ThemeName, PredefinedTheme> = {
       textQuaternary: '#9ca3af',
       borderPrimary: '#2a2d3a',
       borderSecondary: '#2a2d3a',
-      borderTertiary: '#3a5570',
+      borderTertiary: '#2a2d3a',
       accentSuccess: '#16a34a',
       accentWarning: '#d97706',
       accentError: '#dc2626',
